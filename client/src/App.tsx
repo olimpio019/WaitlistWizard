@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation, Redirect } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -7,27 +7,100 @@ import Dashboard from "@/pages/dashboard";
 import FichaFiadorPF from "@/pages/ficha-fiador-pf";
 import FichaLocatariaPJ from "@/pages/ficha-locataria-pj";
 import CadastroImovel from "@/pages/cadastro-imovel";
+import LoginPage from "@/pages/login";
 import MainLayout from "@/components/main-layout";
+import AuthLayout from "@/components/auth-layout";
+import { AuthProvider, useAuth } from "@/hooks/use-auth";
+
+// Rotas protegidas para usuários autenticados
+const ProtectedRoute = ({ component: Component, admin = false, ...rest }: any) => {
+  const { isAuthenticated, isAdmin, isLoading } = useAuth();
+  const [, navigate] = useLocation();
+
+  // Enquanto verifica autenticação, mostra uma tela de carregamento
+  if (isLoading) {
+    return (
+      <MainLayout>
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <p className="mt-4 text-lg">Carregando...</p>
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
+
+  // Se não estiver autenticado, redireciona para o login
+  if (!isAuthenticated) {
+    navigate("/login");
+    return null;
+  }
+
+  // Se a rota exigir admin e o usuário não for admin, redireciona para o dashboard
+  if (admin && !isAdmin) {
+    navigate("/");
+    return null;
+  }
+
+  // Se passar por todas as verificações, renderiza o componente
+  return <Component {...rest} />;
+};
+
+// Rotas públicas para usuários não autenticados
+const PublicRoute = ({ component: Component, ...rest }: any) => {
+  const { isAuthenticated, isLoading } = useAuth();
+  
+  // Se estiver autenticado, redireciona para o dashboard
+  if (isAuthenticated && !isLoading) {
+    return <Redirect to="/" />;
+  }
+  
+  // Se não estiver autenticado, mostra o componente
+  return (
+    <AuthLayout>
+      <Component {...rest} />
+    </AuthLayout>
+  );
+};
 
 function Router() {
   return (
-    <MainLayout>
-      <Switch>
-        <Route path="/" component={Dashboard} />
-        <Route path="/forms/ficha-fiador-pf" component={FichaFiadorPF} />
-        <Route path="/forms/ficha-locataria-pj" component={FichaLocatariaPJ} />
-        <Route path="/forms/cadastro-imovel" component={CadastroImovel} />
-        <Route component={NotFound} />
-      </Switch>
-    </MainLayout>
+    <Switch>
+      {/* Rotas públicas */}
+      <Route path="/login">
+        <PublicRoute component={LoginPage} />
+      </Route>
+
+      {/* Rotas protegidas */}
+      <Route path="/">
+        <ProtectedRoute component={Dashboard} />
+      </Route>
+      <Route path="/forms/ficha-fiador-pf">
+        <ProtectedRoute component={FichaFiadorPF} />
+      </Route>
+      <Route path="/forms/ficha-locataria-pj">
+        <ProtectedRoute component={FichaLocatariaPJ} />
+      </Route>
+      <Route path="/forms/cadastro-imovel">
+        <ProtectedRoute component={CadastroImovel} />
+      </Route>
+      
+      {/* Rota 404 */}
+      <Route>
+        <NotFound />
+      </Route>
+    </Switch>
   );
 }
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router />
-      <Toaster />
+      <AuthProvider>
+        <Router />
+        <Toaster />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
