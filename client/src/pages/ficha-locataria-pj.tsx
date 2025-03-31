@@ -115,7 +115,7 @@ export default function FichaLocatariaPJ() {
   
   const onSubmit = async (data: FichaCadastralLocatariaPJ) => {
     // Check if signature is empty
-    if (signaturePadRef.current?.isEmpty()) {
+    if (!signatureDataUrl) {
       toast({
         title: "Assinatura obrigatória",
         description: "Por favor, assine o formulário antes de enviar.",

@@ -112,7 +112,7 @@ export default function FichaFiadorPF() {
   
   const onSubmit = async (data: FichaCadastralFiadorPF) => {
     // Check if signature is empty
-    if (signaturePadRef.current?.isEmpty()) {
+    if (!signatureDataUrl) {
       toast({
         title: "Assinatura obrigatória",
         description: "Por favor, assine o formulário antes de enviar.",

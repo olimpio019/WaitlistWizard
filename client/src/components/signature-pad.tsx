@@ -18,7 +18,7 @@ export interface SignaturePadRef {
 }
 
 const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
-  ({ onChange, width, height = 200, className, value }, ref) => {
+  ({ onChange, width, height = 150, className, value }, ref) => {
     const sigCanvas = useRef<SignatureCanvas>(null);
     const [isEmpty, setIsEmpty] = useState(true);
 
@@ -36,7 +36,7 @@ const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
           : sigCanvas.current?.toDataURL("image/png") || "";
       },
       isEmpty: () => {
-        return sigCanvas.current?.isEmpty() || true;
+        return sigCanvas.current ? sigCanvas.current.isEmpty() : true;
       },
     }));
 
@@ -78,7 +78,7 @@ const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
 
     return (
       <div className={cn("border-2 border-gray-300 dark:border-gray-600 rounded-lg p-4 bg-white dark:bg-gray-700", className)}>
-        <div className="w-full h-48 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800">
+        <div className="w-full h-32 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800">
           <SignatureCanvas
             ref={sigCanvas}
             canvasProps={{
@@ -92,6 +92,9 @@ const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
                 ? "#FFFFFF"
                 : "#000000"
             }
+            velocityFilterWeight={0.5}
+            minWidth={0.5}
+            maxWidth={2.5}
           />
         </div>
         <div className="mt-2 flex justify-end space-x-2">
