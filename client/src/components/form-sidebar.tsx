@@ -17,25 +17,23 @@ export default function FormSidebar() {
         </h2>
         <ul className="space-y-1">
           <li>
-            <Link href="/">
-              <a
+            <Link href="/"
+              className={cn(
+                "flex items-center p-3 text-base font-medium rounded-lg",
+                isActive("/")
+                  ? "bg-primary text-white"
+                  : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              )}
+            >
+              <Home
                 className={cn(
-                  "flex items-center p-3 text-base font-medium rounded-lg",
+                  "w-6 h-6 mr-2",
                   isActive("/")
-                    ? "bg-primary text-white"
-                    : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    ? ""
+                    : "text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                 )}
-              >
-                <Home
-                  className={cn(
-                    "w-6 h-6 mr-2",
-                    isActive("/")
-                      ? ""
-                      : "text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                  )}
-                />
-                Dashboard
-              </a>
+              />
+              Dashboard
             </Link>
           </li>
           <li>
@@ -56,45 +54,39 @@ export default function FormSidebar() {
             {isFormMenuOpen && (
               <ul className="py-2 space-y-1 pl-12">
                 <li>
-                  <Link href="/forms/ficha-fiador-pf">
-                    <a
-                      className={cn(
-                        "flex items-center p-2 rounded-lg",
-                        isActive("/forms/ficha-fiador-pf")
-                          ? "bg-gray-100 dark:bg-gray-700 text-primary dark:text-primary"
-                          : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                      )}
-                    >
-                      Ficha Cadastral Fiador PF
-                    </a>
+                  <Link href="/forms/ficha-fiador-pf"
+                    className={cn(
+                      "flex items-center p-2 rounded-lg",
+                      isActive("/forms/ficha-fiador-pf")
+                        ? "bg-gray-100 dark:bg-gray-700 text-primary dark:text-primary"
+                        : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    )}
+                  >
+                    Ficha Cadastral Fiador PF
                   </Link>
                 </li>
                 <li>
-                  <Link href="/forms/ficha-locataria-pj">
-                    <a
-                      className={cn(
-                        "flex items-center p-2 rounded-lg",
-                        isActive("/forms/ficha-locataria-pj")
-                          ? "bg-gray-100 dark:bg-gray-700 text-primary dark:text-primary"
-                          : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                      )}
-                    >
-                      Ficha Cadastral Locatária PJ
-                    </a>
+                  <Link href="/forms/ficha-locataria-pj"
+                    className={cn(
+                      "flex items-center p-2 rounded-lg",
+                      isActive("/forms/ficha-locataria-pj")
+                        ? "bg-gray-100 dark:bg-gray-700 text-primary dark:text-primary"
+                        : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    )}
+                  >
+                    Ficha Cadastral Locatária PJ
                   </Link>
                 </li>
                 <li>
-                  <Link href="/forms/cadastro-imovel">
-                    <a
-                      className={cn(
-                        "flex items-center p-2 rounded-lg",
-                        isActive("/forms/cadastro-imovel")
-                          ? "bg-gray-100 dark:bg-gray-700 text-primary dark:text-primary"
-                          : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                      )}
-                    >
-                      Cadastro de Imóvel
-                    </a>
+                  <Link href="/forms/cadastro-imovel"
+                    className={cn(
+                      "flex items-center p-2 rounded-lg",
+                      isActive("/forms/cadastro-imovel")
+                        ? "bg-gray-100 dark:bg-gray-700 text-primary dark:text-primary"
+                        : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    )}
+                  >
+                    Cadastro de Imóvel
                   </Link>
                 </li>
               </ul>

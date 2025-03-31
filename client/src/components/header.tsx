@@ -39,25 +39,21 @@ export default function Header() {
             <ThemeToggle />
 
             <div className="hidden lg:flex items-center space-x-4">
-              <Link href="/">
-                <a className={cn(
-                  "px-3 py-2 rounded-md text-sm font-medium",
-                  isLinkActive("/") 
-                    ? "text-primary dark:text-primary" 
-                    : "text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary"
-                )}>
-                  Painel
-                </a>
+              <Link href="/" className={cn(
+                "px-3 py-2 rounded-md text-sm font-medium",
+                isLinkActive("/") 
+                  ? "text-primary dark:text-primary" 
+                  : "text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary"
+              )}>
+                Painel
               </Link>
-              <Link href="/forms/ficha-fiador-pf">
-                <a className={cn(
-                  "px-3 py-2 rounded-md text-sm font-medium",
-                  isLinkActive("/forms/ficha-fiador-pf") || isLinkActive("/forms/ficha-locataria-pj") || isLinkActive("/forms/cadastro-imovel")
-                    ? "text-primary dark:text-primary" 
-                    : "text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary"
-                )}>
-                  Formulários
-                </a>
+              <Link href="/forms/ficha-fiador-pf" className={cn(
+                "px-3 py-2 rounded-md text-sm font-medium",
+                isLinkActive("/forms/ficha-fiador-pf") || isLinkActive("/forms/ficha-locataria-pj") || isLinkActive("/forms/cadastro-imovel")
+                  ? "text-primary dark:text-primary" 
+                  : "text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary"
+              )}>
+                Formulários
               </Link>
               <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
                 Relatórios
@@ -84,45 +80,37 @@ export default function Header() {
       {/* Mobile menu */}
       <div className={cn("lg:hidden", isMobileMenuOpen ? "block" : "hidden")}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <Link href="/">
-            <a className={cn(
-              "block px-3 py-2 rounded-md text-base font-medium",
-              isLinkActive("/") 
-                ? "bg-primary text-white" 
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-            )}>
-              Painel
-            </a>
+          <Link href="/" className={cn(
+            "block px-3 py-2 rounded-md text-base font-medium",
+            isLinkActive("/") 
+              ? "bg-primary text-white" 
+              : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+          )}>
+            Painel
           </Link>
-          <Link href="/forms/ficha-fiador-pf">
-            <a className={cn(
-              "block px-3 py-2 rounded-md text-base font-medium",
-              isLinkActive("/forms/ficha-fiador-pf") 
-                ? "bg-primary text-white" 
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-            )}>
-              Ficha Cadastral Fiador PF
-            </a>
+          <Link href="/forms/ficha-fiador-pf" className={cn(
+            "block px-3 py-2 rounded-md text-base font-medium",
+            isLinkActive("/forms/ficha-fiador-pf") 
+              ? "bg-primary text-white" 
+              : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+          )}>
+            Ficha Cadastral Fiador PF
           </Link>
-          <Link href="/forms/ficha-locataria-pj">
-            <a className={cn(
-              "block px-3 py-2 rounded-md text-base font-medium",
-              isLinkActive("/forms/ficha-locataria-pj") 
-                ? "bg-primary text-white" 
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-            )}>
-              Ficha Cadastral Locatária PJ
-            </a>
+          <Link href="/forms/ficha-locataria-pj" className={cn(
+            "block px-3 py-2 rounded-md text-base font-medium",
+            isLinkActive("/forms/ficha-locataria-pj") 
+              ? "bg-primary text-white" 
+              : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+          )}>
+            Ficha Cadastral Locatária PJ
           </Link>
-          <Link href="/forms/cadastro-imovel">
-            <a className={cn(
-              "block px-3 py-2 rounded-md text-base font-medium",
-              isLinkActive("/forms/cadastro-imovel") 
-                ? "bg-primary text-white" 
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-            )}>
-              Cadastro de Imóvel
-            </a>
+          <Link href="/forms/cadastro-imovel" className={cn(
+            "block px-3 py-2 rounded-md text-base font-medium",
+            isLinkActive("/forms/cadastro-imovel") 
+              ? "bg-primary text-white" 
+              : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+          )}>
+            Cadastro de Imóvel
           </Link>
           <a href="#" className="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">
             Relatórios
