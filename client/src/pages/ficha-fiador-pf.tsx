@@ -131,10 +131,8 @@ export default function FichaFiadorPF() {
     formData.append('tipoFormulario', 'ficha-fiador-pf');
     formData.append('formData', JSON.stringify(data));
     
-    // Add file if selected
-    if (selectedFile) {
-      formData.append('arquivo', selectedFile);
-    }
+    // Não vamos anexar o arquivo selecionado aqui,
+    // pois já estamos gerando e anexando o PDF no mutationFn
     
     // Submit the form
     submitMutation.mutate(formData);

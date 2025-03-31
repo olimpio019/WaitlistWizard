@@ -1,0 +1,57 @@
+chunk-RPCDYKBN.js?v=8e584ed7:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+ficha-fiador-pf.tsx:81 
+            
+            
+           POST https://6e3ca5ad-fe6f-4a6e-b134-9f8d98c76962-00-3vs70ta7w9czz.picard.replit.dev/api/submissions 500 (Internal Server Error)
+mutationFn @ ficha-fiador-pf.tsx:81
+await in mutationFn
+fn @ @tanstack_react-query.js?v=8e584ed7:1189
+run @ @tanstack_react-query.js?v=8e584ed7:494
+start @ @tanstack_react-query.js?v=8e584ed7:536
+execute @ @tanstack_react-query.js?v=8e584ed7:1225
+await in execute
+mutate @ @tanstack_react-query.js?v=8e584ed7:2630
+(anonymous) @ @tanstack_react-query.js?v=8e584ed7:3295
+onSubmit @ ficha-fiador-pf.tsx:140
+(anonymous) @ chunk-YABUFNLM.js?v=8e584ed7:1675
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=8e584ed7:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=8e584ed7:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=8e584ed7:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=8e584ed7:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=8e584ed7:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=8e584ed7:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=8e584ed7:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=8e584ed7:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=8e584ed7:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=8e584ed7:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=8e584ed7:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=8e584ed7:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=8e584ed7:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=8e584ed7:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=8e584ed7:5449
+ficha-fiador-pf.tsx:104 Error: {"message":"Unexpected field"}
+    at Object.mutationFn (ficha-fiador-pf.tsx:89:15)
+onError @ ficha-fiador-pf.tsx:104
+execute @ @tanstack_react-query.js?v=8e584ed7:1254
+await in execute
+mutate @ @tanstack_react-query.js?v=8e584ed7:2630
+(anonymous) @ @tanstack_react-query.js?v=8e584ed7:3295
+onSubmit @ ficha-fiador-pf.tsx:140
+(anonymous) @ chunk-YABUFNLM.js?v=8e584ed7:1675
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=8e584ed7:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=8e584ed7:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=8e584ed7:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=8e584ed7:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=8e584ed7:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=8e584ed7:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=8e584ed7:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=8e584ed7:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=8e584ed7:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=8e584ed7:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=8e584ed7:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=8e584ed7:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=8e584ed7:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=8e584ed7:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=8e584ed7:5449
