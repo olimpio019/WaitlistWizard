@@ -137,9 +137,40 @@ export const cadastroImovelSchema = z.object({
 // Base submission schema for database operations
 export const insertSubmissionSchema = createInsertSchema(submissions);
 
+// Users schema for authentication
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  password: text("password").notNull(),
+  nome: text("nome").notNull(),
+  email: text("email").notNull(),
+  isAdmin: boolean("is_admin").default(false).notNull(),
+  dataCriacao: timestamp("data_criacao").defaultNow().notNull(),
+});
+
+// User schema for validation
+export const userSchema = z.object({
+  username: z.string().min(3, "Nome de usuário deve ter pelo menos 3 caracteres"),
+  password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
+  nome: z.string().min(1, "Nome é obrigatório"),
+  email: z.string().email("E-mail inválido"),
+  isAdmin: z.boolean().optional(),
+});
+
+// Login schema for validation
+export const loginSchema = z.object({
+  username: z.string().min(1, "Nome de usuário é obrigatório"),
+  password: z.string().min(1, "Senha é obrigatória"),
+});
+
+// Base user schema for database operations
+export const insertUserSchema = createInsertSchema(users);
+
 // Type definitions
 export type Submission = typeof submissions.$inferSelect;
 export type InsertSubmission = typeof submissions.$inferInsert;
+export type User = typeof users.$inferSelect;
+export type InsertUser = typeof users.$inferInsert;
 export type FichaCadastralFiadorPF = z.infer<typeof fichaCadastralFiadorPFSchema>;
 export type FichaCadastralLocatariaPJ = z.infer<typeof fichaCadastralLocatariaPJSchema>;
 export type CadastroImovel = z.infer<typeof cadastroImovelSchema>;

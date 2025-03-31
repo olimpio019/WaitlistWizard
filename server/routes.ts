@@ -1,12 +1,16 @@
-import type { Express, Request, Response } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { ZodError } from "zod";
+import passport from "passport";
 import {
   insertSubmissionSchema,
   fichaCadastralFiadorPFSchema,
   fichaCadastralLocatariaPJSchema,
-  cadastroImovelSchema
+  cadastroImovelSchema,
+  loginSchema,
+  userSchema,
+  insertUserSchema
 } from "@shared/schema";
 import multer from "multer";
 import path from "path";
@@ -44,9 +48,220 @@ const upload = multer({
   }
 });
 
+// Middleware para verificar se o usuário está autenticado
+const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'Não autorizado. Faça login primeiro.' });
+};
+
+// Middleware para verificar se o usuário é admin
+const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+  if (req.isAuthenticated() && req.user && (req.user as any).isAdmin) {
+    return next();
+  }
+  res.status(403).json({ message: 'Acesso negado. É necessário privilégios de administrador.' });
+};
+
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Rotas de autenticação
+  app.post('/api/auth/login', (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // Valida os dados de login
+      const loginData = loginSchema.parse(req.body);
+      
+      passport.authenticate('local', (err: any, user: any, info: any) => {
+        if (err) {
+          return next(err);
+        }
+        
+        if (!user) {
+          return res.status(401).json({ message: info.message || 'Usuário ou senha inválidos' });
+        }
+        
+        req.login(user, (err) => {
+          if (err) {
+            return next(err);
+          }
+          
+          // Não envie a senha de volta ao cliente
+          const { password, ...userWithoutPassword } = user;
+          return res.json({ 
+            message: 'Login realizado com sucesso',
+            user: userWithoutPassword
+          });
+        });
+      })(req, res, next);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ 
+          message: 'Dados de login inválidos', 
+          errors: validationError.details 
+        });
+      }
+      
+      res.status(500).json({ 
+        message: 'Erro ao realizar login', 
+        error: error instanceof Error ? error.message : 'Erro desconhecido' 
+      });
+    }
+  });
+  
+  app.post('/api/auth/logout', (req: Request, res: Response) => {
+    req.logout(() => {
+      res.json({ message: 'Logout realizado com sucesso' });
+    });
+  });
+  
+  app.get('/api/auth/status', (req: Request, res: Response) => {
+    if (req.isAuthenticated()) {
+      const { password, ...userWithoutPassword } = req.user as any;
+      res.json({ 
+        authenticated: true,
+        user: userWithoutPassword
+      });
+    } else {
+      res.json({ authenticated: false });
+    }
+  });
+  
+  // CRUD de usuários (protegido por admin)
+  app.get('/api/users', isAdmin, async (req: Request, res: Response) => {
+    try {
+      const users = await storage.getAllUsers();
+      // Não envie as senhas ao cliente
+      const usersWithoutPasswords = users.map(user => {
+        const { password, ...userWithoutPassword } = user;
+        return userWithoutPassword;
+      });
+      
+      res.json(usersWithoutPasswords);
+    } catch (error) {
+      res.status(500).json({ 
+        message: 'Erro ao obter usuários', 
+        error: error instanceof Error ? error.message : 'Erro desconhecido' 
+      });
+    }
+  });
+  
+  app.post('/api/users', isAdmin, async (req: Request, res: Response) => {
+    try {
+      // Valida os dados do usuário
+      const userData = userSchema.parse(req.body);
+      
+      // Verifica se o username já existe
+      const existingUser = await storage.getUserByUsername(userData.username);
+      if (existingUser) {
+        return res.status(400).json({ message: 'Nome de usuário já existe' });
+      }
+      
+      // Cria o usuário
+      const newUser = await storage.createUser(userData);
+      
+      // Não envie a senha de volta ao cliente
+      const { password, ...userWithoutPassword } = newUser;
+      
+      res.status(201).json(userWithoutPassword);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ 
+          message: 'Dados de usuário inválidos', 
+          errors: validationError.details 
+        });
+      }
+      
+      res.status(500).json({ 
+        message: 'Erro ao criar usuário', 
+        error: error instanceof Error ? error.message : 'Erro desconhecido' 
+      });
+    }
+  });
+  
+  app.put('/api/users/:id', isAdmin, async (req: Request, res: Response) => {
+    try {
+      const id = Number(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: 'ID inválido' });
+      }
+      
+      // Verifica se o usuário existe
+      const existingUser = await storage.getUserById(id);
+      if (!existingUser) {
+        return res.status(404).json({ message: 'Usuário não encontrado' });
+      }
+      
+      // Valida os dados do usuário (partial)
+      const userData = userSchema.partial().parse(req.body);
+      
+      // Se o username estiver sendo alterado, verifica se já existe
+      if (userData.username && userData.username !== existingUser.username) {
+        const usernameExists = await storage.getUserByUsername(userData.username);
+        if (usernameExists) {
+          return res.status(400).json({ message: 'Nome de usuário já existe' });
+        }
+      }
+      
+      // Atualiza o usuário
+      const updatedUser = await storage.updateUser(id, userData);
+      
+      // Não envie a senha de volta ao cliente
+      const { password, ...userWithoutPassword } = updatedUser!;
+      
+      res.json(userWithoutPassword);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ 
+          message: 'Dados de usuário inválidos', 
+          errors: validationError.details 
+        });
+      }
+      
+      res.status(500).json({ 
+        message: 'Erro ao atualizar usuário', 
+        error: error instanceof Error ? error.message : 'Erro desconhecido' 
+      });
+    }
+  });
+  
+  app.delete('/api/users/:id', isAdmin, async (req: Request, res: Response) => {
+    try {
+      const id = Number(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: 'ID inválido' });
+      }
+      
+      // Não permite excluir o próprio usuário
+      if (req.user && (req.user as any).id === id) {
+        return res.status(400).json({ message: 'Não é possível excluir seu próprio usuário' });
+      }
+      
+      // Verifica se o usuário existe
+      const existingUser = await storage.getUserById(id);
+      if (!existingUser) {
+        return res.status(404).json({ message: 'Usuário não encontrado' });
+      }
+      
+      // Exclui o usuário
+      await storage.deleteUser(id);
+      
+      res.json({ message: 'Usuário excluído com sucesso' });
+    } catch (error) {
+      res.status(500).json({ 
+        message: 'Erro ao excluir usuário', 
+        error: error instanceof Error ? error.message : 'Erro desconhecido' 
+      });
+    }
+  });
+  
+  // ROTAS PROTEGIDAS - Requer autenticação
+  // Adicione isAuthenticated ou isAdmin como middleware para proteger as rotas
+  
   // Get stats for dashboard
-  app.get('/api/stats', async (req: Request, res: Response) => {
+  app.get('/api/stats', isAuthenticated, async (req: Request, res: Response) => {
     try {
       const stats = await storage.getSubmissionStats();
       res.json(stats);
@@ -59,7 +274,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get all submissions
-  app.get('/api/submissions', async (req: Request, res: Response) => {
+  app.get('/api/submissions', isAuthenticated, async (req: Request, res: Response) => {
     try {
       const submissions = await storage.getAllSubmissions();
       res.json(submissions);
@@ -72,7 +287,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get a specific submission
-  app.get('/api/submissions/:id', async (req: Request, res: Response) => {
+  app.get('/api/submissions/:id', isAuthenticated, async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
       if (isNaN(id)) {
@@ -94,7 +309,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Create a new submission
-  app.post('/api/submissions', upload.single('arquivo'), async (req: Request, res: Response) => {
+  app.post('/api/submissions', upload.single('arquivo'), isAdmin, async (req: Request, res: Response) => {
     try {
       const { tipoFormulario, ...formData } = req.body;
       
@@ -149,7 +364,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Update a submission
-  app.put('/api/submissions/:id', upload.single('arquivo'), async (req: Request, res: Response) => {
+  app.put('/api/submissions/:id', upload.single('arquivo'), isAdmin, async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
       if (isNaN(id)) {
@@ -214,7 +429,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Delete a submission
-  app.delete('/api/submissions/:id', async (req: Request, res: Response) => {
+  app.delete('/api/submissions/:id', isAdmin, async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
       if (isNaN(id)) {
@@ -246,7 +461,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // API endpoint to download a generated PDF based on the submission data
-  app.get('/api/submissions/:id/pdf', async (req: Request, res: Response) => {
+  app.get('/api/submissions/:id/pdf', isAuthenticated, async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
       if (isNaN(id)) {
