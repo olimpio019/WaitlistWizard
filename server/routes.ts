@@ -308,22 +308,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Create a new submission
-  app.post('/api/submissions', upload.single('arquivo'), isAdmin, async (req: Request, res: Response) => {
+  // Create a new submission - acesso público para envio de formulários
+  app.post('/api/submissions', upload.single('arquivo'), async (req: Request, res: Response) => {
     try {
+      if (!req.body) {
+        return res.status(400).json({ message: 'Dados do formulário não fornecidos' });
+      }
+      
       const { tipoFormulario, ...formData } = req.body;
+      
+      if (!tipoFormulario) {
+        return res.status(400).json({ message: 'Tipo de formulário não especificado' });
+      }
+      
+      if (!formData.formData) {
+        return res.status(400).json({ message: 'Dados do formulário não fornecidos' });
+      }
       
       // Validate form data based on form type
       let validatedData;
-      
-      if (tipoFormulario === 'ficha-fiador-pf') {
-        validatedData = fichaCadastralFiadorPFSchema.parse(JSON.parse(formData.formData));
-      } else if (tipoFormulario === 'ficha-locataria-pj') {
-        validatedData = fichaCadastralLocatariaPJSchema.parse(JSON.parse(formData.formData));
-      } else if (tipoFormulario === 'cadastro-imovel') {
-        validatedData = cadastroImovelSchema.parse(JSON.parse(formData.formData));
-      } else {
-        return res.status(400).json({ message: 'Tipo de formulário inválido' });
+      try {
+        if (tipoFormulario === 'ficha-fiador-pf') {
+          validatedData = fichaCadastralFiadorPFSchema.parse(JSON.parse(formData.formData));
+        } else if (tipoFormulario === 'ficha-locataria-pj') {
+          validatedData = fichaCadastralLocatariaPJSchema.parse(JSON.parse(formData.formData));
+        } else if (tipoFormulario === 'cadastro-imovel') {
+          validatedData = cadastroImovelSchema.parse(JSON.parse(formData.formData));
+        } else {
+          return res.status(400).json({ message: 'Tipo de formulário inválido' });
+        }
+      } catch (parseError) {
+        console.error('Erro ao processar dados do formulário:', parseError);
+        return res.status(400).json({ 
+          message: 'Erro ao processar dados do formulário', 
+          error: parseError instanceof Error ? parseError.message : 'Erro desconhecido' 
+        });
       }
       
       // Create submission data

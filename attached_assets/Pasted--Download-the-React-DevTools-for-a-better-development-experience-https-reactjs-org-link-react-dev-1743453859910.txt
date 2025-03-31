@@ -1,0 +1,57 @@
+ Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+ 
+            
+            
+           POST https://6e3ca5ad-fe6f-4a6e-b134-9f8d98c76962-00-3vs70ta7w9czz.picard.replit.dev/api/submissions 403 (Forbidden)
+mutationFn @ /src/pages/ficha-locataria-pj.tsx:94
+await in mutationFn
+fn @ @tanstack_react-query.js:1189
+run @ @tanstack_react-query.js:494
+start @ @tanstack_react-query.js:536
+execute @ @tanstack_react-query.js:1225
+await in execute
+mutate @ @tanstack_react-query.js:2630
+(anonymous) @ @tanstack_react-query.js:3295
+onSubmit @ /src/pages/ficha-locataria-pj.tsx:136
+(anonymous) @ chunk-YABUFNLM.js:1675
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js:3736
+executeDispatch @ chunk-RPCDYKBN.js:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js:7034
+processDispatchQueue @ chunk-RPCDYKBN.js:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js:7051
+(anonymous) @ chunk-RPCDYKBN.js:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js:18913
+batchedUpdates @ chunk-RPCDYKBN.js:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js:5478
+dispatchEvent @ chunk-RPCDYKBN.js:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js:5449
+ Error: {"message":"Acesso negado. É necessário privilégios de administrador."}
+    at Object.mutationFn (/src/pages/ficha-locataria-pj.tsx:101:15)
+onError @ /src/pages/ficha-locataria-pj.tsx:115
+execute @ @tanstack_react-query.js:1254
+await in execute
+mutate @ @tanstack_react-query.js:2630
+(anonymous) @ @tanstack_react-query.js:3295
+onSubmit @ /src/pages/ficha-locataria-pj.tsx:136
+(anonymous) @ chunk-YABUFNLM.js:1675
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js:3736
+executeDispatch @ chunk-RPCDYKBN.js:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js:7034
+processDispatchQueue @ chunk-RPCDYKBN.js:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js:7051
+(anonymous) @ chunk-RPCDYKBN.js:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js:18913
+batchedUpdates @ chunk-RPCDYKBN.js:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js:5478
+dispatchEvent @ chunk-RPCDYKBN.js:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js:5449
