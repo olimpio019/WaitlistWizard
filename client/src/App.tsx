@@ -70,19 +70,27 @@ function Router() {
     <Switch>
       {/* Rotas públicas */}
       <Route path="/">
-        <Home />
+        <MainLayout>
+          <Home />
+        </MainLayout>
       </Route>
       <Route path="/login">
         <PublicRoute component={LoginPage} />
       </Route>
       <Route path="/forms/ficha-fiador-pf">
-        <FichaFiadorPF />
+        <MainLayout>
+          <FichaFiadorPF />
+        </MainLayout>
       </Route>
       <Route path="/forms/ficha-locataria-pj">
-        <FichaLocatariaPJ />
+        <MainLayout>
+          <FichaLocatariaPJ />
+        </MainLayout>
       </Route>
       <Route path="/forms/cadastro-imovel">
-        <CadastroImovel />
+        <MainLayout>
+          <CadastroImovel />
+        </MainLayout>
       </Route>
 
       {/* Rotas protegidas - apenas admin */}
