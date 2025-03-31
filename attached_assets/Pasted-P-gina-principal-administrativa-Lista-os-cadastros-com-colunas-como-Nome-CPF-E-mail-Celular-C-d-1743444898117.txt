@@ -1,0 +1,298 @@
+Página principal administrativa: Lista os cadastros com colunas como Nome, CPF, E-mail, Celular, Código do Imóvel, Data de Cadastro e Ações (visualizar, baixar, excluir).
+
+Páginas de formulários: Cada modelo (ex.: Ficha Cadastral Fiador PF, Ficha Cadastral Locatária PJ, etc.) terá sua própria rota, com campos do formulário, área para assinatura (usando, por exemplo, uma biblioteca de assinatura digital), botão para upload de arquivos PDF e, ao final, geração de um PDF.
+
+API para submissões: Após preencher o formulário, os dados e o PDF gerado serão enviados para uma API que os salva (por exemplo, em um banco de dados ou armazenamento) e, em seguida, são listados na área administrativa.
+
+A seguir, um exemplo simplificado que pode ser executado no Replit:
+
+1. Estrutura de Pastas Sugerida
+go
+Copiar
+Editar
+/meu-sistema-imobiliaria
+├── pages
+│   ├── index.tsx               // Página administrativa
+│   ├── forms
+│   │   ├── fichaFiadorPF.tsx   // Exemplo de formulário Ficha Cadastral Fiador PF
+│   │   └── ...                 // Outras páginas de formulário
+│   └── api
+│       └── submissions.ts      // API para salvar e gerenciar os cadastros
+├── components
+│   ├── Layout.tsx              // Layout comum com dark mode (pode usar TailwindCSS)
+│   ├── FormInput.tsx           // Componente para inputs do formulário
+│   └── SignaturePad.tsx        // Componente para assinatura (por exemplo, usando react-signature-canvas)
+├── styles
+│   └── globals.css             // Estilos globais (incluindo dark mode, se usar Tailwind ou CSS customizado)
+├── package.json
+├── tsconfig.json
+└── ...
+2. Exemplo de Código
+a) Layout com Dark Mode
+Exemplo usando Tailwind CSS (certifique-se de configurar o Tailwind no projeto):
+
+tsx
+Copiar
+Editar
+// components/Layout.tsx
+import React, { ReactNode } from 'react';
+
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  return (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+      <header className="p-4 bg-blue-600 dark:bg-blue-800">
+        <h1 className="text-2xl font-bold">Sistema Imobiliária</h1>
+      </header>
+      <main className="p-4">
+        {children}
+      </main>
+    </div>
+  );
+};
+
+export default Layout;
+b) Página Administrativa (Lista de Cadastros)
+tsx
+Copiar
+Editar
+// pages/index.tsx
+import { useEffect, useState } from 'react';
+import Layout from '../components/Layout';
+
+interface Submission {
+  id: string;
+  nome: string;
+  cpf: string;
+  email: string;
+  celular: string;
+  codigoImovel: string;
+  dataCadastro: string;
+}
+
+const AdminPage = () => {
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
+
+  useEffect(() => {
+    // Buscar dados da API (exemplo com fetch)
+    fetch('/api/submissions')
+      .then(res => res.json())
+      .then(data => setSubmissions(data));
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    await fetch(`/api/submissions?id=${id}`, { method: 'DELETE' });
+    setSubmissions(submissions.filter(s => s.id !== id));
+  };
+
+  return (
+    <Layout>
+      <h2 className="text-xl font-semibold mb-4">Cadastros</h2>
+      <table className="min-w-full bg-white dark:bg-gray-800">
+        <thead>
+          <tr>
+            <th className="p-2 border">Nome</th>
+            <th className="p-2 border">CPF</th>
+            <th className="p-2 border">E-mail</th>
+            <th className="p-2 border">Celular</th>
+            <th className="p-2 border">Código do Imóvel</th>
+            <th className="p-2 border">Data de Cadastro</th>
+            <th className="p-2 border">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {submissions.map(sub => (
+            <tr key={sub.id}>
+              <td className="p-2 border">{sub.nome}</td>
+              <td className="p-2 border">{sub.cpf}</td>
+              <td className="p-2 border">{sub.email}</td>
+              <td className="p-2 border">{sub.celular}</td>
+              <td className="p-2 border">{sub.codigoImovel}</td>
+              <td className="p-2 border">{sub.dataCadastro}</td>
+              <td className="p-2 border">
+                <button className="bg-green-500 text-white p-1 rounded mr-2">Visualizar</button>
+                <button className="bg-red-500 text-white p-1 rounded" onClick={() => handleDelete(sub.id)}>Excluir</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </Layout>
+  );
+};
+
+export default AdminPage;
+c) Exemplo de Página de Formulário (Ficha Fiador PF)
+Nesta página você pode incluir campos, a área para assinatura e upload de PDF. No exemplo, usamos um formulário simples e após o submit, geramos um PDF (utilize uma biblioteca como jsPDF ou pdf-lib).
+
+tsx
+Copiar
+Editar
+// pages/forms/fichaFiadorPF.tsx
+import { useState, useRef } from 'react';
+import Layout from '../../components/Layout';
+import SignaturePad from '../../components/SignaturePad';
+
+const FichaFiadorPF = () => {
+  const [formData, setFormData] = useState({
+    nome: '',
+    cpf: '',
+    email: '',
+    celular: '',
+    codigoImovel: '',
+  });
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const signaturePadRef = useRef<any>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setPdfFile(e.target.files[0]);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // Aqui você pode capturar a assinatura
+    const signatureData = signaturePadRef.current?.getTrimmedCanvas().toDataURL('image/png');
+
+    // Aqui você pode gerar o PDF com os dados e a assinatura usando uma biblioteca
+    // Exemplo fictício:
+    // const pdf = generatePDF(formData, signatureData, pdfFile);
+    // Em seguida, envie para a API:
+    const submissionData = {
+      ...formData,
+      assinatura: signatureData,
+      dataCadastro: new Date().toLocaleDateString(),
+    };
+
+    const formPayload = new FormData();
+    formPayload.append('data', JSON.stringify(submissionData));
+    if (pdfFile) {
+      formPayload.append('arquivo', pdfFile);
+    }
+
+    await fetch('/api/submissions', {
+      method: 'POST',
+      body: formPayload,
+    });
+
+    alert('Formulário enviado com sucesso!');
+  };
+
+  return (
+    <Layout>
+      <h2 className="text-xl font-semibold mb-4">Ficha Cadastral Fiador PF</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label>Nome:</label>
+          <input type="text" name="nome" value={formData.nome} onChange={handleChange} className="border p-2 rounded w-full" required />
+        </div>
+        <div>
+          <label>CPF:</label>
+          <input type="text" name="cpf" value={formData.cpf} onChange={handleChange} className="border p-2 rounded w-full" required />
+        </div>
+        <div>
+          <label>E-mail:</label>
+          <input type="email" name="email" value={formData.email} onChange={handleChange} className="border p-2 rounded w-full" required />
+        </div>
+        <div>
+          <label>Celular:</label>
+          <input type="text" name="celular" value={formData.celular} onChange={handleChange} className="border p-2 rounded w-full" required />
+        </div>
+        <div>
+          <label>Código do Imóvel:</label>
+          <input type="text" name="codigoImovel" value={formData.codigoImovel} onChange={handleChange} className="border p-2 rounded w-full" required />
+        </div>
+
+        {/* Área para upload de PDF */}
+        <div>
+          <label>Upload de Documento (PDF):</label>
+          <input type="file" accept="application/pdf" onChange={handleFileChange} />
+        </div>
+
+        {/* Componente de Assinatura */}
+        <div>
+          <label>Assinatura:</label>
+          <SignaturePad ref={signaturePadRef} canvasProps={{ className: 'border rounded w-full', height: 200 }} />
+        </div>
+
+        <button type="submit" className="bg-blue-600 text-white p-2 rounded">Enviar</button>
+      </form>
+    </Layout>
+  );
+};
+
+export default FichaFiadorPF;
+d) Exemplo de Componente de Assinatura
+Utilizando a biblioteca react-signature-canvas:
+
+tsx
+Copiar
+Editar
+// components/SignaturePad.tsx
+import React, { forwardRef } from 'react';
+import ReactSignatureCanvas from 'react-signature-canvas';
+
+const SignaturePad = forwardRef<ReactSignatureCanvas>((props, ref) => {
+  return <ReactSignatureCanvas ref={ref} {...props} />;
+});
+
+SignaturePad.displayName = 'SignaturePad';
+
+export default SignaturePad;
+e) API para Gerenciar Submissões
+Esta API simples lida com requisições GET, POST e DELETE. Em produção, você poderá integrar com um banco de dados (MongoDB, PostgreSQL, etc.):
+
+ts
+Copiar
+Editar
+// pages/api/submissions.ts
+import { NextApiRequest, NextApiResponse } from 'next';
+
+// Simulação de armazenamento em memória
+let submissions: any[] = [];
+
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === 'GET') {
+    return res.status(200).json(submissions);
+  } else if (req.method === 'POST') {
+    // Aqui, você precisará tratar o FormData, salvar o PDF e os dados no seu BD.
+    // Para simplificação, usamos JSON.parse e simulamos um ID.
+    const { data } = req.body ? req.body : {};
+    let submission;
+    if (data) {
+      submission = JSON.parse(data);
+    } else {
+      submission = req.body;
+    }
+    submission.id = Date.now().toString();
+    submissions.push(submission);
+    return res.status(201).json({ message: 'Enviado com sucesso' });
+  } else if (req.method === 'DELETE') {
+    const { id } = req.query;
+    submissions = submissions.filter(sub => sub.id !== id);
+    return res.status(200).json({ message: 'Excluído com sucesso' });
+  } else {
+    res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
+    return res.status(405).end(`Método ${req.method} não permitido`);
+  }
+};
+3. Considerações Finais
+PDF Generation: Para gerar PDFs a partir dos dados do formulário e assinatura, avalie bibliotecas como jsPDF ou pdf-lib. Você pode gerar o PDF no lado do cliente ou em uma API separada.
+
+Validação e Segurança: Certifique-se de validar os dados dos formulários, tratar erros e proteger suas APIs.
+
+Responsividade: Utilize classes responsivas do Tailwind CSS (ou media queries) para garantir que o site funcione bem em telas grandes e menores.
+
+Dark Mode: O exemplo acima já utiliza classes condicionais para dark mode; ajuste conforme sua preferência.
+
+Esse script é um ponto de partida e pode ser expandido conforme as necessidades do seu sistema imobiliário. Basta criar mais páginas para os outros formulários seguindo o mesmo padrão e integrar os processos de geração e armazenamento de PDFs.
+
+Com essa estrutura e os exemplos de código, você já tem uma base funcional para desenvolver um sistema completo para imobiliárias no Replit usando TypeScript, Next.js e dark mode.
