@@ -8,6 +8,7 @@ import FichaFiadorPF from "@/pages/ficha-fiador-pf";
 import FichaLocatariaPJ from "@/pages/ficha-locataria-pj";
 import CadastroImovel from "@/pages/cadastro-imovel";
 import LoginPage from "@/pages/login";
+import Home from "@/pages/home";
 import MainLayout from "@/components/main-layout";
 import AuthLayout from "@/components/auth-layout";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
@@ -44,7 +45,7 @@ const ProtectedRoute = ({ component: Component, admin = false, ...rest }: any) =
   }
 
   // Se passar por todas as verificações, renderiza o componente
-  return <Component {...rest} />;
+  return <MainLayout><Component {...rest} /></MainLayout>;
 };
 
 // Rotas públicas para usuários não autenticados
@@ -68,22 +69,28 @@ function Router() {
   return (
     <Switch>
       {/* Rotas públicas */}
+      <Route path="/">
+        <Home />
+      </Route>
       <Route path="/login">
         <PublicRoute component={LoginPage} />
       </Route>
-
-      {/* Rotas protegidas */}
-      <Route path="/">
-        <ProtectedRoute component={Dashboard} />
-      </Route>
       <Route path="/forms/ficha-fiador-pf">
-        <ProtectedRoute component={FichaFiadorPF} />
+        <FichaFiadorPF />
       </Route>
       <Route path="/forms/ficha-locataria-pj">
-        <ProtectedRoute component={FichaLocatariaPJ} />
+        <FichaLocatariaPJ />
       </Route>
       <Route path="/forms/cadastro-imovel">
-        <ProtectedRoute component={CadastroImovel} />
+        <CadastroImovel />
+      </Route>
+
+      {/* Rotas protegidas - apenas admin */}
+      <Route path="/admin">
+        <ProtectedRoute component={Dashboard} admin={true} />
+      </Route>
+      <Route path="/admin/dashboard">
+        <ProtectedRoute component={Dashboard} admin={true} />
       </Route>
       
       {/* Rota 404 */}

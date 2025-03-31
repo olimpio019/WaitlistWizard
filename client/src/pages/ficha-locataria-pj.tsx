@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -159,7 +159,7 @@ export default function FichaLocatariaPJ() {
   };
 
   return (
-    <div>
+    <div className="container mx-auto p-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Ficha Cadastral Locatária PJ</h1>
         <Button
