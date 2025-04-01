@@ -16,6 +16,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
+import logo from "@/assets/logo.svg";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -60,8 +61,11 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 px-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader>
+          <div className="flex justify-center mb-4">
+            <img src={logo} alt="Logo Imobiliária Confiança" className="h-16" />
+          </div>
           <CardTitle className="text-2xl font-bold text-center">
-            Imobiliária Admin
+            Área Administrativa
           </CardTitle>
           <CardDescription className="text-center">
             Faça login para acessar o sistema
@@ -120,7 +124,7 @@ export default function LoginPage() {
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center text-sm text-muted-foreground">
-          <p>Use admin / admin123 para acessar como administrador</p>
+          <p>Entre em contato com o administrador para obter credenciais</p>
         </CardFooter>
       </Card>
     </div>

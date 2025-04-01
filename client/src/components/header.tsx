@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { Menu, Home, LogOut, User } from "lucide-react";
+import { Menu, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/ui-theme-toggle";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
+import logo from "@/assets/logo.svg";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -47,8 +48,9 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center">
-            <Home className="h-8 w-8 text-primary" />
-            <h1 className="ml-2 text-xl font-bold">Sistema Imobiliária</h1>
+            <Link href="/">
+              <img src={logo} alt="Logo Imobiliária Confiança" className="h-10" />
+            </Link>
           </div>
 
           <div className="flex items-center space-x-4">

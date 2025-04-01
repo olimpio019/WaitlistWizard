@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200px" height="70px" viewBox="0 0 200 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Logo Imobiliária</title>
+    <g id="Logo" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Fundo" fill="#2563EB" x="0" y="0" width="200" height="70" rx="8"></rect>
+        <g id="Casa" transform="translate(15, 12)" fill="#FFFFFF">
+            <path d="M30,10 L50,25 L45,25 L45,45 L15,45 L15,25 L10,25 L30,10 Z M25,25 L25,40 L35,40 L35,25 L25,25 Z" id="Casa-Icone"></path>
+        </g>
+        <text id="IMOBILIÁRIA" font-family="Arial-BoldMT, Arial" font-size="18" font-weight="bold" fill="#FFFFFF">
+            <tspan x="70" y="30">IMOBILIÁRIA</tspan>
+        </text>
+        <text id="CONFIANÇA" font-family="Arial-BoldMT, Arial" font-size="14" font-weight="bold" fill="#FFFFFF">
+            <tspan x="70" y="48">CONFIANÇA</tspan>
+        </text>
+    </g>
+</svg>

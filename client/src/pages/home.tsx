@@ -4,6 +4,7 @@ import { Building, FileText, Home as HomeIcon, ChevronsRight } from "lucide-reac
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import logo from "@/assets/logo.svg";
 
 export default function Home() {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -36,6 +37,9 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4 py-8">
       <header className="text-center mb-12">
+        <div className="flex justify-center mb-6">
+          <img src={logo} alt="Logo Imobiliária Confiança" className="h-20" />
+        </div>
         <h1 className="text-4xl font-bold mb-4">Sistema de Gestão Imobiliária</h1>
         <p className="text-xl text-muted-foreground">
           Preencha os formulários abaixo para cadastro em nosso sistema

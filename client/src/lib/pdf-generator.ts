@@ -1,6 +1,7 @@
 import { jsPDF } from "jspdf";
 import { FichaCadastralFiadorPF, FichaCadastralLocatariaPJ, CadastroImovel } from "@shared/schema";
 import { formatCPF, formatCNPJ, formatPhone, formatDate, formatCEP } from "@/lib/utils";
+import logo from "@/assets/logo.svg";
 
 // Helper function to add multiline text
 const addMultiLineText = (
@@ -15,11 +16,33 @@ const addMultiLineText = (
   return y + (lines.length * 7); // Return the new Y position
 };
 
+// Função para adicionar o logo no cabeçalho dos PDFs
+const addLogoHeader = (doc: jsPDF) => {
+  // Adiciona o logo no topo do documento
+  const logoWidth = 40;
+  const logoHeight = 14;
+  
+  // Converte SVG para URL base64 para uso com jsPDF
+  const logoImg = new Image();
+  logoImg.src = logo;
+  
+  // Adiciona o logo como imagem
+  try {
+    doc.addImage(logoImg, 'SVG', 14, 5, logoWidth, logoHeight);
+  } catch (error) {
+    console.error("Erro ao adicionar logo:", error);
+  }
+  
+  return logoHeight + 10; // Retorna a altura após o logo
+};
+
 // Generate PDF for Ficha Cadastral Fiador PF
 export const generateFichaCadastralFiadorPFPdf = (data: FichaCadastralFiadorPF, assinatura?: string): Promise<Blob> => {
   return new Promise((resolve) => {
     const doc = new jsPDF();
-    let yPos = 20;
+    
+    // Adiciona o logo no cabeçalho
+    let yPos = addLogoHeader(doc);
     
     // Title
     doc.setFontSize(18);
@@ -157,7 +180,9 @@ export const generateFichaCadastralFiadorPFPdf = (data: FichaCadastralFiadorPF, 
 export const generateFichaCadastralLocatariaPJPdf = (data: FichaCadastralLocatariaPJ, assinatura?: string): Promise<Blob> => {
   return new Promise((resolve) => {
     const doc = new jsPDF();
-    let yPos = 20;
+    
+    // Adiciona o logo no cabeçalho
+    let yPos = addLogoHeader(doc);
     
     // Title
     doc.setFontSize(18);
@@ -317,7 +342,9 @@ export const generateFichaCadastralLocatariaPJPdf = (data: FichaCadastralLocatar
 export const generateCadastroImovelPdf = (data: CadastroImovel, assinatura?: string): Promise<Blob> => {
   return new Promise((resolve) => {
     const doc = new jsPDF();
-    let yPos = 20;
+    
+    // Adiciona o logo no cabeçalho
+    let yPos = addLogoHeader(doc);
     
     // Title
     doc.setFontSize(18);
