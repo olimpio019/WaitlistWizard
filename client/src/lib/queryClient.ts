@@ -13,10 +13,18 @@ export async function apiRequest<T = any>(options: {
   data?: unknown | undefined;
 }): Promise<T> {
   const { method, url, data } = options;
+  
+  // Verificar se estamos enviando FormData ou JSON
+  const isFormData = data instanceof FormData;
+  
   const res = await fetch(url, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
-    body: data ? JSON.stringify(data) : undefined,
+    headers: data && !isFormData ? { "Content-Type": "application/json" } : {},
+    body: data 
+      ? isFormData 
+        ? data
+        : JSON.stringify(data)
+      : undefined,
     credentials: "include",
   });
 
