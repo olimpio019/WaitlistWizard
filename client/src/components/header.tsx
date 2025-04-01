@@ -83,9 +83,14 @@ export default function Header() {
               )}>
                 Formulários
               </Link>
-              <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+              <Link href="/admin/relatorios" className={cn(
+                "px-3 py-2 rounded-md text-sm font-medium",
+                isLinkActive("/admin/relatorios") 
+                  ? "text-primary dark:text-primary" 
+                  : "text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary"
+              )}>
                 Relatórios
-              </a>
+              </Link>
             </div>
 
             <div className="relative">
@@ -120,7 +125,7 @@ export default function Header() {
                         </div>
                       </div>
                       <DropdownMenuItem asChild>
-                        <Link href="/" className="cursor-pointer flex items-center">
+                        <Link href="/admin/perfil" className="cursor-pointer flex items-center">
                           <User className="mr-2 h-4 w-4" />
                           <span>Meu Perfil</span>
                         </Link>
@@ -173,9 +178,30 @@ export default function Header() {
           )}>
             Cadastro de Imóvel
           </Link>
-          <a href="#" className="text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium">
+          <Link href="/admin/relatorios" className={cn(
+            "block px-3 py-2 rounded-md text-base font-medium",
+            isLinkActive("/admin/relatorios") 
+              ? "bg-primary text-white" 
+              : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+          )}>
             Relatórios
-          </a>
+          </Link>
+          <Link href="/admin/configuracoes" className={cn(
+            "block px-3 py-2 rounded-md text-base font-medium",
+            isLinkActive("/admin/configuracoes") 
+              ? "bg-primary text-white" 
+              : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+          )}>
+            Configurações
+          </Link>
+          <Link href="/admin/perfil" className={cn(
+            "block px-3 py-2 rounded-md text-base font-medium",
+            isLinkActive("/admin/perfil") 
+              ? "bg-primary text-white" 
+              : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+          )}>
+            Meu Perfil
+          </Link>
           {user && (
             <button
               onClick={handleLogout}

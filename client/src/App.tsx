@@ -9,6 +9,9 @@ import FichaLocatariaPJ from "@/pages/ficha-locataria-pj";
 import CadastroImovel from "@/pages/cadastro-imovel";
 import LoginPage from "@/pages/login";
 import Home from "@/pages/home";
+import Relatorios from "@/pages/relatorios";
+import Configuracoes from "@/pages/configuracoes";
+import Perfil from "@/pages/perfil";
 import MainLayout from "@/components/main-layout";
 import AuthLayout from "@/components/auth-layout";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
@@ -99,6 +102,15 @@ function Router() {
       </Route>
       <Route path="/admin/dashboard">
         <ProtectedRoute component={Dashboard} admin={true} />
+      </Route>
+      <Route path="/admin/relatorios">
+        <ProtectedRoute component={Relatorios} admin={true} />
+      </Route>
+      <Route path="/admin/configuracoes">
+        <ProtectedRoute component={Configuracoes} admin={true} />
+      </Route>
+      <Route path="/admin/perfil">
+        <ProtectedRoute component={Perfil} admin={true} />
       </Route>
       
       {/* Rota 404 */}

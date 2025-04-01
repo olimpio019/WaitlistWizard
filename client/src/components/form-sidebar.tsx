@@ -93,22 +93,44 @@ export default function FormSidebar() {
             )}
           </li>
           <li>
-            <a
-              href="#"
-              className="flex items-center p-3 text-base font-medium text-gray-900 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group"
+            <Link href="/admin/relatorios"
+              className={cn(
+                "flex items-center p-3 text-base font-medium rounded-lg",
+                isActive("/admin/relatorios")
+                  ? "bg-primary text-white"
+                  : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              )}
             >
-              <BarChart2 className="w-6 h-6 mr-2 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+              <BarChart2
+                className={cn(
+                  "w-6 h-6 mr-2",
+                  isActive("/admin/relatorios")
+                    ? ""
+                    : "text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                )}
+              />
               Relatórios
-            </a>
+            </Link>
           </li>
           <li>
-            <a
-              href="#"
-              className="flex items-center p-3 text-base font-medium text-gray-900 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group"
+            <Link href="/admin/configuracoes"
+              className={cn(
+                "flex items-center p-3 text-base font-medium rounded-lg",
+                isActive("/admin/configuracoes")
+                  ? "bg-primary text-white"
+                  : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              )}
             >
-              <Settings className="w-6 h-6 mr-2 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+              <Settings
+                className={cn(
+                  "w-6 h-6 mr-2",
+                  isActive("/admin/configuracoes")
+                    ? ""
+                    : "text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                )}
+              />
               Configurações
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
