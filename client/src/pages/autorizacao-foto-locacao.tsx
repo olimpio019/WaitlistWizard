@@ -30,6 +30,7 @@ export default function AutorizacaoFotoLocacao() {
       email: '',
       celular: '',
       telefone: '',
+      codigoImovel: '',
       enderecoImovel: '',
       tipoImovel: '',
       areaImovel: '',
@@ -217,6 +218,20 @@ export default function AutorizacaoFotoLocacao() {
               <CardDescription>Dados do imóvel a ser autorizado</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
+              <FormField
+                control={form.control}
+                name="codigoImovel"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Código do Imóvel</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Código do imóvel" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
               <FormField
                 control={form.control}
                 name="enderecoImovel"

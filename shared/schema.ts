@@ -289,6 +289,7 @@ export const autorizacaoFotoVendaSchema = z.object({
   ...contactSchema.shape,
   
   // Property information
+  codigoImovel: z.string().min(1, "Código do imóvel é obrigatório"),
   enderecoImovel: z.string().min(1, "Endereço do imóvel é obrigatório"),
   tipoImovel: z.string().min(1, "Tipo do imóvel é obrigatório"),
   areaImovel: z.string().min(1, "Área do imóvel é obrigatória"),
@@ -314,6 +315,7 @@ export const autorizacaoFotoLocacaoSchema = z.object({
   ...contactSchema.shape,
   
   // Property information
+  codigoImovel: z.string().min(1, "Código do imóvel é obrigatório"),
   enderecoImovel: z.string().min(1, "Endereço do imóvel é obrigatório"),
   tipoImovel: z.string().min(1, "Tipo do imóvel é obrigatório"),
   areaImovel: z.string().min(1, "Área do imóvel é obrigatória"),
