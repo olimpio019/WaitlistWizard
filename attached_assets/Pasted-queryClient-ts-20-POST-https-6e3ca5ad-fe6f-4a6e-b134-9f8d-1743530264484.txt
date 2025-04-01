@@ -1,0 +1,118 @@
+queryClient.ts:20 
+            
+            
+           POST https://6e3ca5ad-fe6f-4a6e-b134-9f8d98c76962-00-3vs70ta7w9czz.picard.replit.dev/api/submissions 400 (Bad Request)
+apiRequest @ queryClient.ts:20
+mutationFn @ autorizacao-imoveis.tsx:46
+fn @ @tanstack_react-query.js?v=207f833c:1189
+run @ @tanstack_react-query.js?v=207f833c:494
+start @ @tanstack_react-query.js?v=207f833c:536
+execute @ @tanstack_react-query.js?v=207f833c:1225
+await in execute
+mutate @ @tanstack_react-query.js?v=207f833c:2630
+(anonymous) @ @tanstack_react-query.js?v=207f833c:3295
+onSubmit @ autorizacao-imoveis.tsx:90
+await in onSubmit
+(anonymous) @ chunk-YABUFNLM.js?v=207f833c:1675
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=207f833c:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=207f833c:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=207f833c:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=207f833c:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=207f833c:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=207f833c:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=207f833c:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=207f833c:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=207f833c:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=207f833c:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=207f833c:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=207f833c:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=207f833c:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=207f833c:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=207f833c:5449
+autorizacao-imoveis.tsx:62 Erro ao enviar formulário: Error: 400: {"message":"Dados inválidos","errors":[{"code":"invalid_type","expected":"string","received":"undefined","path":["codigoImovel"],"message":"Required"}]}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:31:3)
+onError @ autorizacao-imoveis.tsx:62
+execute @ @tanstack_react-query.js?v=207f833c:1254
+await in execute
+mutate @ @tanstack_react-query.js?v=207f833c:2630
+(anonymous) @ @tanstack_react-query.js?v=207f833c:3295
+onSubmit @ autorizacao-imoveis.tsx:90
+await in onSubmit
+(anonymous) @ chunk-YABUFNLM.js?v=207f833c:1675
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=207f833c:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=207f833c:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=207f833c:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=207f833c:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=207f833c:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=207f833c:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=207f833c:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=207f833c:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=207f833c:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=207f833c:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=207f833c:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=207f833c:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=207f833c:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=207f833c:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=207f833c:5449
+queryClient.ts:20 
+            
+            
+           POST https://6e3ca5ad-fe6f-4a6e-b134-9f8d98c76962-00-3vs70ta7w9czz.picard.replit.dev/api/submissions 400 (Bad Request)
+apiRequest @ queryClient.ts:20
+mutationFn @ proposta-compra.tsx:49
+fn @ @tanstack_react-query.js?v=207f833c:1189
+run @ @tanstack_react-query.js?v=207f833c:494
+start @ @tanstack_react-query.js?v=207f833c:536
+execute @ @tanstack_react-query.js?v=207f833c:1225
+await in execute
+mutate @ @tanstack_react-query.js?v=207f833c:2630
+(anonymous) @ @tanstack_react-query.js?v=207f833c:3295
+onSubmit @ proposta-compra.tsx:93
+await in onSubmit
+(anonymous) @ chunk-YABUFNLM.js?v=207f833c:1675
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=207f833c:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=207f833c:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=207f833c:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=207f833c:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=207f833c:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=207f833c:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=207f833c:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=207f833c:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=207f833c:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=207f833c:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=207f833c:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=207f833c:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=207f833c:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=207f833c:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=207f833c:5449
+proposta-compra.tsx:65 Erro ao enviar formulário: Error: 400: {"message":"Dados inválidos","errors":[{"code":"invalid_type","expected":"string","received":"undefined","path":["nome"],"message":"Required"},{"code":"invalid_type","expected":"string","received":"undefined","path":["cpf"],"message":"Required"}]}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:31:3)
+onError @ proposta-compra.tsx:65
+execute @ @tanstack_react-query.js?v=207f833c:1254
+await in execute
+mutate @ @tanstack_react-query.js?v=207f833c:2630
+(anonymous) @ @tanstack_react-query.js?v=207f833c:3295
+onSubmit @ proposta-compra.tsx:93
+await in onSubmit
+(anonymous) @ chunk-YABUFNLM.js?v=207f833c:1675
+await in (anonymous)
+callCallback2 @ chunk-RPCDYKBN.js?v=207f833c:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=207f833c:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=207f833c:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=207f833c:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=207f833c:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=207f833c:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=207f833c:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=207f833c:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=207f833c:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=207f833c:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=207f833c:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=207f833c:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=207f833c:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=207f833c:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=207f833c:5449

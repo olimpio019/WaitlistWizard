@@ -420,17 +420,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create submission data
       const submissionData = {
-        nome: validatedData.nome || validatedData.razaoSocial || validatedData.nomeProprietario,
-        cpf: validatedData.cpf || validatedData.cnpj || validatedData.cpfCnpjProprietario,
+        nome: validatedData.nome || validatedData.razaoSocial || validatedData.nomeProprietario || validatedData.nomeComprador,
+        cpf: validatedData.cpf || validatedData.cnpj || validatedData.cpfCnpjProprietario || validatedData.cpfComprador,
         email: validatedData.email || validatedData.emailProprietario,
         celular: validatedData.celular || validatedData.telefoneProprietario,
         codigoImovel: validatedData.codigoImovel,
         tipoFormulario,
         formData: JSON.stringify(validatedData),
         assinatura: validatedData.assinatura,
-        arquivoPdf: req.file ? req.file.filename : undefined,
         dataCadastro: new Date()
       };
+      
+      if (req.file) {
+        submissionData['arquivoPdf'] = req.file.filename;
+      }
       
       // Validate with submission schema
       const parsedSubmission = insertSubmissionSchema.parse(submissionData);
@@ -497,8 +500,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Update submission data
       const submissionData = {
-        nome: validatedData.nome || validatedData.razaoSocial || validatedData.nomeProprietario,
-        cpf: validatedData.cpf || validatedData.cnpj || validatedData.cpfCnpjProprietario,
+        nome: validatedData.nome || validatedData.razaoSocial || validatedData.nomeProprietario || validatedData.nomeComprador,
+        cpf: validatedData.cpf || validatedData.cnpj || validatedData.cpfCnpjProprietario || validatedData.cpfComprador,
         email: validatedData.email || validatedData.emailProprietario,
         celular: validatedData.celular || validatedData.telefoneProprietario,
         codigoImovel: validatedData.codigoImovel,
