@@ -1,4 +1,4 @@
-import type { Express, Request, Response, NextFunction } from "express";
+import express, { type Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { ZodError } from "zod";
@@ -65,6 +65,9 @@ const isAdmin = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Configurar diretório de uploads como estático para acessar arquivos
+  app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+  
   // Rotas de autenticação
   app.post('/api/auth/login', (req: Request, res: Response, next: NextFunction) => {
     try {

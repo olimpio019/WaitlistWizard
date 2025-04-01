@@ -1,5 +1,7 @@
 import { submissions, users, type Submission, type InsertSubmission, type User, type InsertUser } from "@shared/schema";
 import bcrypt from "bcryptjs";
+import { db } from "./db";
+import { eq, desc, and, sql } from "drizzle-orm";
 
 export interface IStorage {
   // Submissions
@@ -26,80 +28,65 @@ export interface IStorage {
   validateUser(username: string, password: string): Promise<User | null>;
 }
 
-export class MemStorage implements IStorage {
-  private submissions: Map<number, Submission>;
-  private users: Map<number, User>;
-  private currentSubmissionId: number;
-  private currentUserId: number;
-
-  constructor() {
-    this.submissions = new Map();
-    this.users = new Map();
-    this.currentSubmissionId = 1;
-    this.currentUserId = 1;
-    
-    // Create a default admin user
-    this.createUser({
-      username: "admin",
-      password: bcrypt.hashSync("admin123", 10),
-      nome: "Administrador",
-      email: "admin@example.com",
-      isAdmin: true
-    });
-  }
-
+export class DatabaseStorage implements IStorage {
   // SUBMISSION METHODS
   async getAllSubmissions(): Promise<Submission[]> {
-    return Array.from(this.submissions.values())
-      .sort((a, b) => new Date(b.dataCadastro).getTime() - new Date(a.dataCadastro).getTime());
+    return db.select().from(submissions).orderBy(desc(submissions.dataCadastro));
   }
 
   async getSubmission(id: number): Promise<Submission | undefined> {
-    return this.submissions.get(id);
+    const result = await db.select().from(submissions).where(eq(submissions.id, id));
+    return result[0];
   }
 
   async createSubmission(submission: InsertSubmission): Promise<Submission> {
-    const id = this.currentSubmissionId++;
     const now = new Date();
-    
-    const newSubmission: Submission = {
+    const submissionWithDefaults = {
       ...submission,
-      id,
       dataCadastro: submission.dataCadastro || now,
       assinatura: submission.assinatura || null,
       arquivoPdf: submission.arquivoPdf || null
     };
     
-    this.submissions.set(id, newSubmission);
+    const [newSubmission] = await db.insert(submissions)
+      .values(submissionWithDefaults)
+      .returning();
+    
     return newSubmission;
   }
 
   async updateSubmission(id: number, submission: Partial<InsertSubmission>): Promise<Submission | undefined> {
-    const existingSubmission = this.submissions.get(id);
+    const existingSubmission = await this.getSubmission(id);
     
     if (!existingSubmission) {
       return undefined;
     }
     
-    const updatedSubmission: Submission = {
-      ...existingSubmission,
+    // Preparar o objeto de atualização mantendo valores existentes se não fornecidos
+    const updateData = {
       ...submission,
       assinatura: submission.assinatura !== undefined ? submission.assinatura : existingSubmission.assinatura,
       arquivoPdf: submission.arquivoPdf !== undefined ? submission.arquivoPdf : existingSubmission.arquivoPdf
     };
     
-    this.submissions.set(id, updatedSubmission);
+    const [updatedSubmission] = await db.update(submissions)
+      .set(updateData)
+      .where(eq(submissions.id, id))
+      .returning();
+    
     return updatedSubmission;
   }
 
   async deleteSubmission(id: number): Promise<boolean> {
-    return this.submissions.delete(id);
+    const result = await db.delete(submissions).where(eq(submissions.id, id)).returning({ id: submissions.id });
+    return result.length > 0;
   }
 
   async getSubmissionsByType(type: string): Promise<Submission[]> {
-    return Array.from(this.submissions.values())
-      .filter(submission => submission.tipoFormulario === type)
-      .sort((a, b) => new Date(b.dataCadastro).getTime() - new Date(a.dataCadastro).getTime());
+    return db.select()
+      .from(submissions)
+      .where(eq(submissions.tipoFormulario, type))
+      .orderBy(desc(submissions.dataCadastro));
   }
 
   async getSubmissionStats(): Promise<{ 
@@ -108,79 +95,96 @@ export class MemStorage implements IStorage {
     contratosPendentes: number; 
     documentosPendentes: number; 
   }> {
-    const allSubmissions = Array.from(this.submissions.values());
-    const imoveis = allSubmissions.filter(s => s.tipoFormulario === 'cadastro-imovel');
+    // Obter contagem total de cadastros
+    const [totalResult] = await db.select({ count: sql<number>`count(*)` }).from(submissions);
+    const totalCadastros = totalResult?.count || 0;
     
-    // For this example, we'll use simple logic to determine status
-    // In a real app, this would be based on actual status fields
+    // Obter imóveis disponíveis (tipo cadastro-imovel)
+    const [imoveisResult] = await db.select({ count: sql<number>`count(*)` })
+      .from(submissions)
+      .where(eq(submissions.tipoFormulario, 'cadastro-imovel'));
+    const imoveisDisponiveis = imoveisResult?.count || 0;
+    
+    // Para este exemplo, calcularemos contratos e documentos pendentes como percentuais do total
+    // Em um aplicativo real, isso seria baseado em campos de status reais
+    const contratosPendentes = Math.floor(totalCadastros * 0.1); // 10% dos cadastros
+    const documentosPendentes = Math.floor(totalCadastros * 0.15); // 15% dos cadastros
+    
     return {
-      totalCadastros: allSubmissions.length,
-      imoveisDisponiveis: imoveis.length,
-      contratosPendentes: Math.floor(allSubmissions.length * 0.1), // 10% of submissions for demo
-      documentosPendentes: Math.floor(allSubmissions.length * 0.15), // 15% of submissions for demo
+      totalCadastros,
+      imoveisDisponiveis,
+      contratosPendentes,
+      documentosPendentes
     };
   }
   
   // USER METHODS
   async getAllUsers(): Promise<User[]> {
-    return Array.from(this.users.values())
-      .sort((a, b) => a.nome.localeCompare(b.nome));
+    return db.select().from(users).orderBy(users.nome);
   }
   
   async getUserById(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const result = await db.select().from(users).where(eq(users.id, id));
+    return result[0];
   }
   
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.username === username);
+    const result = await db.select().from(users).where(eq(users.username, username));
+    return result[0];
   }
   
   async createUser(user: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
     const now = new Date();
     
     // Hash the password if it's not already hashed
-    if (!user.password.startsWith('$2a$') && !user.password.startsWith('$2b$') && !user.password.startsWith('$2y$')) {
-      user.password = bcrypt.hashSync(user.password, 10);
+    let password = user.password;
+    if (!password.startsWith('$2a$') && !password.startsWith('$2b$') && !password.startsWith('$2y$')) {
+      password = bcrypt.hashSync(password, 10);
     }
     
-    const newUser: User = {
+    const userData = {
       ...user,
-      id,
+      password,
       isAdmin: user.isAdmin ?? false,
       dataCriacao: user.dataCriacao || now
     };
     
-    this.users.set(id, newUser);
+    const [newUser] = await db.insert(users)
+      .values(userData)
+      .returning();
+    
     return newUser;
   }
   
   async updateUser(id: number, userData: Partial<InsertUser>): Promise<User | undefined> {
-    const existingUser = this.users.get(id);
+    const existingUser = await this.getUserById(id);
     
     if (!existingUser) {
       return undefined;
     }
     
+    // Preparar dados para atualização
+    const updateData = { ...userData };
+    
     // Hash the password if it has been changed and is not already hashed
-    if (userData.password && 
-        !userData.password.startsWith('$2a$') && 
-        !userData.password.startsWith('$2b$') && 
-        !userData.password.startsWith('$2y$')) {
-      userData.password = bcrypt.hashSync(userData.password, 10);
+    if (updateData.password && 
+        !updateData.password.startsWith('$2a$') && 
+        !updateData.password.startsWith('$2b$') && 
+        !updateData.password.startsWith('$2y$')) {
+      updateData.password = bcrypt.hashSync(updateData.password, 10);
     }
     
-    const updatedUser: User = {
-      ...existingUser,
-      ...userData
-    };
+    const [updatedUser] = await db.update(users)
+      .set(updateData)
+      .where(eq(users.id, id))
+      .returning();
     
-    this.users.set(id, updatedUser);
     return updatedUser;
   }
   
   async deleteUser(id: number): Promise<boolean> {
-    return this.users.delete(id);
+    const result = await db.delete(users).where(eq(users.id, id)).returning({ id: users.id });
+    return result.length > 0;
   }
   
   async validateUser(username: string, password: string): Promise<User | null> {
@@ -198,6 +202,23 @@ export class MemStorage implements IStorage {
     
     return user;
   }
+
+  // Método para verificar se já existe um usuário admin e criar um se não existir
+  async initializeAdminUser(): Promise<void> {
+    const adminUser = await this.getUserByUsername('admin');
+    
+    if (!adminUser) {
+      await this.createUser({
+        username: "admin",
+        password: bcrypt.hashSync("admin123", 10),
+        nome: "Administrador",
+        email: "admin@example.com",
+        isAdmin: true
+      });
+      console.log('Admin user created successfully.');
+    }
+  }
 }
 
-export const storage = new MemStorage();
+// Inicializamos o banco de dados com um armazenamento PostgreSQL
+export const storage = new DatabaseStorage();
