@@ -210,12 +210,20 @@ export class DatabaseStorage implements IStorage {
     if (!adminUser) {
       await this.createUser({
         username: "admin",
-        password: bcrypt.hashSync("admin123", 10),
+        password: bcrypt.hashSync("Lanza@admin1214", 10),
         nome: "Administrador",
-        email: "admin@example.com",
+        email: "admin@lanzaimoveis.com.br",
         isAdmin: true
       });
       console.log('Admin user created successfully.');
+    } else {
+      // Atualiza o usuário admin existente com as novas credenciais
+      await this.updateUser(adminUser.id, {
+        username: "admin",
+        password: "Lanza@admin1214",
+        email: "admin@lanzaimoveis.com.br"
+      });
+      console.log('Admin user credentials updated.');
     }
   }
 }
