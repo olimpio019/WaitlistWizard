@@ -275,6 +275,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+  
+  // Get submissions by type for pie chart
+  app.get('/api/stats/by-type', isAuthenticated, async (req: Request, res: Response) => {
+    try {
+      const data = await storage.getSubmissionTypeCounts();
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ 
+        message: 'Erro ao obter estatísticas por tipo', 
+        error: error instanceof Error ? error.message : 'Erro desconhecido' 
+      });
+    }
+  });
+  
+  // Get monthly activity data for bar chart
+  app.get('/api/stats/monthly-activity', isAuthenticated, async (req: Request, res: Response) => {
+    try {
+      const data = await storage.getMonthlyActivity();
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ 
+        message: 'Erro ao obter atividade mensal', 
+        error: error instanceof Error ? error.message : 'Erro desconhecido' 
+      });
+    }
+  });
+  
+  // Get financial data for chart
+  app.get('/api/stats/financial', isAuthenticated, async (req: Request, res: Response) => {
+    try {
+      const data = await storage.getFinancialData();
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ 
+        message: 'Erro ao obter dados financeiros', 
+        error: error instanceof Error ? error.message : 'Erro desconhecido' 
+      });
+    }
+  });
+  
+  // Get occupation rate data for chart
+  app.get('/api/stats/occupation', isAuthenticated, async (req: Request, res: Response) => {
+    try {
+      const data = await storage.getOccupationData();
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ 
+        message: 'Erro ao obter dados de ocupação', 
+        error: error instanceof Error ? error.message : 'Erro desconhecido' 
+      });
+    }
+  });
 
   // Get all submissions
   app.get('/api/submissions', isAuthenticated, async (req: Request, res: Response) => {

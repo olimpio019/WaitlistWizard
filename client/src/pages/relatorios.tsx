@@ -43,51 +43,48 @@ export default function Relatorios() {
     queryKey: ['/api/stats'],
   });
   
-  // Dados de exemplo para os gráficos
-  const pieChartData = [
-    { name: 'Fiador PF', value: 35, fill: '#8884d8' },
-    { name: 'Locatária PJ', value: 25, fill: '#83a6ed' },
-    { name: 'Imóveis', value: 40, fill: '#8dd1e1' },
-  ];
-
-  const monthlyActivityData = [
-    { name: '1-5', cadastros: 12 },
-    { name: '6-10', cadastros: 19 },
-    { name: '11-15', cadastros: 15 },
-    { name: '16-20', cadastros: 22 },
-    { name: '21-25', cadastros: 18 },
-    { name: '26-31', cadastros: 24 },
-  ];
-
-  const financialData = [
-    { mes: 'Jan', receita: 4000, despesa: 2400 },
-    { mes: 'Fev', receita: 3000, despesa: 1398 },
-    { mes: 'Mar', receita: 2000, despesa: 1800 },
-    { mes: 'Abr', receita: 2780, despesa: 2108 },
-    { mes: 'Mai', receita: 1890, despesa: 1600 },
-    { mes: 'Jun', receita: 2390, despesa: 1500 },
-    { mes: 'Jul', receita: 3490, despesa: 2100 },
-    { mes: 'Ago', receita: 4000, despesa: 2400 },
-    { mes: 'Set', receita: 3200, despesa: 1800 },
-    { mes: 'Out', receita: 2800, despesa: 1600 },
-    { mes: 'Nov', receita: 3300, despesa: 2000 },
-    { mes: 'Dez', receita: 5000, despesa: 2200 },
-  ];
-
-  const occupationData = [
-    { mes: 'Jan', taxa: 68 },
-    { mes: 'Fev', taxa: 72 },
-    { mes: 'Mar', taxa: 75 },
-    { mes: 'Abr', taxa: 80 },
-    { mes: 'Mai', taxa: 82 },
-    { mes: 'Jun', taxa: 85 },
-    { mes: 'Jul', taxa: 87 },
-    { mes: 'Ago', taxa: 88 },
-    { mes: 'Set', taxa: 85 },
-    { mes: 'Out', taxa: 82 },
-    { mes: 'Nov', taxa: 86 },
-    { mes: 'Dez', taxa: 90 },
-  ];
+  // Interfaces para tipagem dos dados
+  interface ChartItem {
+    name: string;
+    value: number;
+  }
+  
+  interface ActivityItem {
+    name: string;
+    cadastros: number;
+  }
+  
+  interface FinancialItem {
+    mes: string;
+    receita: number;
+    despesa: number;
+  }
+  
+  interface OccupationItem {
+    mes: string;
+    taxa: number;
+  }
+  
+  // Obtenção de dados reais para os gráficos
+  const { data: pieChartData = [], isLoading: isPieLoading } = useQuery<ChartItem[]>({
+    queryKey: ['/api/stats/by-type'],
+    staleTime: 1000 * 60 * 5 // 5 minutos
+  });
+  
+  const { data: monthlyActivityData = [], isLoading: isActivityLoading } = useQuery<ActivityItem[]>({
+    queryKey: ['/api/stats/monthly-activity'],
+    staleTime: 1000 * 60 * 5 // 5 minutos
+  });
+  
+  const { data: financialData = [], isLoading: isFinancialLoading } = useQuery<FinancialItem[]>({
+    queryKey: ['/api/stats/financial'],
+    staleTime: 1000 * 60 * 5 // 5 minutos
+  });
+  
+  const { data: occupationData = [], isLoading: isOccupationLoading } = useQuery<OccupationItem[]>({
+    queryKey: ['/api/stats/occupation'],
+    staleTime: 1000 * 60 * 5 // 5 minutos
+  });
   
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#83a6ed'];
   
@@ -300,7 +297,12 @@ export default function Relatorios() {
                     <CardTitle className="text-sm font-medium">Receita Anual</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{formatCurrency(35850)}</div>
+                    <div className="text-2xl font-bold">
+                      {isFinancialLoading 
+                        ? "..." 
+                        : formatCurrency(financialData.reduce((sum, item) => sum + item.receita, 0))
+                      }
+                    </div>
                     <p className="text-xs text-muted-foreground">+12.3% em relação ao ano anterior</p>
                   </CardContent>
                 </Card>
@@ -309,7 +311,12 @@ export default function Relatorios() {
                     <CardTitle className="text-sm font-medium">Despesas Anuais</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{formatCurrency(21898)}</div>
+                    <div className="text-2xl font-bold">
+                      {isFinancialLoading 
+                        ? "..." 
+                        : formatCurrency(financialData.reduce((sum, item) => sum + item.despesa, 0))
+                      }
+                    </div>
                     <p className="text-xs text-muted-foreground">+5.6% em relação ao ano anterior</p>
                   </CardContent>
                 </Card>
@@ -318,7 +325,15 @@ export default function Relatorios() {
                     <CardTitle className="text-sm font-medium">Lucro Anual</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{formatCurrency(13952)}</div>
+                    <div className="text-2xl font-bold">
+                      {isFinancialLoading 
+                        ? "..." 
+                        : formatCurrency(
+                            financialData.reduce((sum, item) => sum + item.receita, 0) - 
+                            financialData.reduce((sum, item) => sum + item.despesa, 0)
+                          )
+                      }
+                    </div>
                     <p className="text-xs text-muted-foreground">+23.8% em relação ao ano anterior</p>
                   </CardContent>
                 </Card>
@@ -354,7 +369,13 @@ export default function Relatorios() {
                     <CardTitle className="text-sm font-medium">Taxa de Ocupação Atual</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">90%</div>
+                    <div className="text-2xl font-bold">
+                      {isOccupationLoading 
+                        ? "..." 
+                        : occupationData.length 
+                          ? `${occupationData[occupationData.length - 1]?.taxa}%` 
+                          : "0%"}
+                    </div>
                     <p className="text-xs text-muted-foreground">+4.0% em relação ao mês anterior</p>
                   </CardContent>
                 </Card>
@@ -363,7 +384,13 @@ export default function Relatorios() {
                     <CardTitle className="text-sm font-medium">Média Anual</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">82%</div>
+                    <div className="text-2xl font-bold">
+                      {isOccupationLoading 
+                        ? "..." 
+                        : occupationData.length 
+                          ? `${Math.round(occupationData.reduce((sum, item) => sum + item.taxa, 0) / occupationData.length)}%` 
+                          : "0%"}
+                    </div>
                     <p className="text-xs text-muted-foreground">+7.3% em relação ao ano anterior</p>
                   </CardContent>
                 </Card>

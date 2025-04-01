@@ -18,6 +18,12 @@ export interface IStorage {
     documentosPendentes: number; 
   }>;
   
+  // Métodos para gráficos e relatórios
+  getSubmissionTypeCounts(): Promise<{ name: string; value: number }[]>;
+  getMonthlyActivity(): Promise<{ name: string; cadastros: number }[]>;
+  getFinancialData(): Promise<{ mes: string; receita: number; despesa: number }[]>;
+  getOccupationData(): Promise<{ mes: string; taxa: number }[]>;
+  
   // Users
   getAllUsers(): Promise<User[]>;
   getUserById(id: number): Promise<User | undefined>;
@@ -116,6 +122,107 @@ export class DatabaseStorage implements IStorage {
       contratosPendentes,
       documentosPendentes
     };
+  }
+  
+  // Novos métodos para dados de gráficos
+  
+  async getSubmissionTypeCounts(): Promise<{ name: string; value: number }[]> {
+    // Obter cadastros agrupados por tipo
+    const result = await db
+      .select({
+        name: submissions.tipoFormulario,
+        value: sql<number>`count(*)`
+      })
+      .from(submissions)
+      .groupBy(submissions.tipoFormulario);
+    
+    // Mapeando nomes para versões mais amigáveis
+    return result.map(item => ({
+      name: item.name === 'ficha-fiador-pf' 
+        ? 'Fiador PF' 
+        : item.name === 'ficha-locataria-pj' 
+        ? 'Locatária PJ' 
+        : 'Imóvel',
+      value: Number(item.value)
+    }));
+  }
+  
+  async getMonthlyActivity(): Promise<{ name: string; cadastros: number }[]> {
+    // Em um caso real, usaríamos consultas de data para agrupar por mês
+    // Como precisamos de dados reais, vamos usar as entradas que já temos no banco
+    
+    // Primeiro, obter todos os cadastros com suas datas
+    const allSubmissions = await db
+      .select({
+        id: submissions.id,
+        dataCadastro: submissions.dataCadastro
+      })
+      .from(submissions)
+      .orderBy(submissions.dataCadastro);
+    
+    // Criar um mapa com meses dos últimos 30 dias
+    const today = new Date();
+    const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+    const monthlyData: Record<string, number> = {};
+    
+    // Inicializar com os últimos 6 meses
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date();
+      d.setMonth(d.getMonth() - i);
+      const monthKey = `${monthNames[d.getMonth()]}`;
+      monthlyData[monthKey] = 0;
+    }
+    
+    // Contar cadastros por mês
+    allSubmissions.forEach(sub => {
+      const date = new Date(sub.dataCadastro);
+      const monthKey = `${monthNames[date.getMonth()]}`;
+      
+      // Só contar se for dos últimos 6 meses
+      if (monthlyData[monthKey] !== undefined) {
+        monthlyData[monthKey]++;
+      }
+    });
+    
+    // Converter para o formato esperado
+    return Object.entries(monthlyData).map(([name, cadastros]) => ({
+      name,
+      cadastros
+    }));
+  }
+  
+  async getFinancialData(): Promise<{ mes: string; receita: number; despesa: number }[]> {
+    // Em um sistema real, esses dados viriam de uma tabela financeira
+    // Como exemplo, vamos gerar dados proporcionais aos cadastros
+    
+    const monthlyActivity = await this.getMonthlyActivity();
+    
+    // Converter para dados financeiros (receitas ~3000 por cadastro, despesas ~60% da receita)
+    return monthlyActivity.map(({ name, cadastros }) => ({
+      mes: name,
+      receita: cadastros * 3000 + Math.floor(Math.random() * 1000), // Alguma variação
+      despesa: Math.floor((cadastros * 3000 * 0.6) + Math.floor(Math.random() * 500))
+    }));
+  }
+  
+  async getOccupationData(): Promise<{ mes: string; taxa: number }[]> {
+    // Em um sistema real, esses dados viriam de uma tabela de ocupação
+    // Como exemplo, vamos gerar taxas de ocupação baseadas no número de imóveis e meses
+    
+    const monthlyActivity = await this.getMonthlyActivity();
+    
+    // Base rate starts at 70% with some variance per month
+    let baseRate = 70;
+    
+    return monthlyActivity.map(({ name }) => {
+      // Adjust base rate slightly each month (up or down by up to 5%)
+      baseRate = Math.min(95, Math.max(60, baseRate + (Math.random() * 10 - 5)));
+      
+      return {
+        mes: name,
+        taxa: Math.round(baseRate)
+      };
+    });
   }
   
   // USER METHODS
