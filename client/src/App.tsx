@@ -12,6 +12,12 @@ import Home from "@/pages/home";
 import Relatorios from "@/pages/relatorios";
 import Configuracoes from "@/pages/configuracoes";
 import Perfil from "@/pages/perfil";
+import FichaLocatariaPF from "@/pages/ficha-locataria-pf";
+import PropostaCompra from "@/pages/proposta-compra";
+import PropostaLocacao from "@/pages/proposta-locacao";
+import AutorizacaoImoveis from "@/pages/autorizacao-imoveis";
+import AutorizacaoFotoVenda from "@/pages/autorizacao-foto-venda";
+import AutorizacaoFotoLocacao from "@/pages/autorizacao-foto-locacao";
 import MainLayout from "@/components/main-layout";
 import AuthLayout from "@/components/auth-layout";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
@@ -93,6 +99,36 @@ function Router() {
       <Route path="/forms/cadastro-imovel">
         <MainLayout>
           <CadastroImovel />
+        </MainLayout>
+      </Route>
+      <Route path="/forms/ficha-locataria-pf">
+        <MainLayout>
+          <FichaLocatariaPF />
+        </MainLayout>
+      </Route>
+      <Route path="/forms/proposta-compra">
+        <MainLayout>
+          <PropostaCompra />
+        </MainLayout>
+      </Route>
+      <Route path="/forms/proposta-locacao">
+        <MainLayout>
+          <PropostaLocacao />
+        </MainLayout>
+      </Route>
+      <Route path="/forms/autorizacao-imoveis">
+        <MainLayout>
+          <AutorizacaoImoveis />
+        </MainLayout>
+      </Route>
+      <Route path="/forms/autorizacao-foto-venda">
+        <MainLayout>
+          <AutorizacaoFotoVenda />
+        </MainLayout>
+      </Route>
+      <Route path="/forms/autorizacao-foto-locacao">
+        <MainLayout>
+          <AutorizacaoFotoLocacao />
         </MainLayout>
       </Route>
 

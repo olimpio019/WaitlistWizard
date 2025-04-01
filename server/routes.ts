@@ -8,6 +8,12 @@ import {
   fichaCadastralFiadorPFSchema,
   fichaCadastralLocatariaPJSchema,
   cadastroImovelSchema,
+  fichaCadastralLocatarioPFSchema,
+  propostaCompraSchema,
+  propostaLocacaoSchema,
+  autorizacaoImoveisSchema,
+  autorizacaoFotoVendaSchema,
+  autorizacaoFotoLocacaoSchema,
   loginSchema,
   userSchema,
   insertUserSchema
@@ -389,6 +395,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
           validatedData = fichaCadastralLocatariaPJSchema.parse(JSON.parse(formData.formData));
         } else if (tipoFormulario === 'cadastro-imovel') {
           validatedData = cadastroImovelSchema.parse(JSON.parse(formData.formData));
+        } else if (tipoFormulario === 'ficha-locataria-pf') {
+          validatedData = fichaCadastralLocatarioPFSchema.parse(JSON.parse(formData.formData));
+        } else if (tipoFormulario === 'proposta-compra') {
+          validatedData = propostaCompraSchema.parse(JSON.parse(formData.formData));
+        } else if (tipoFormulario === 'proposta-locacao') {
+          validatedData = propostaLocacaoSchema.parse(JSON.parse(formData.formData));
+        } else if (tipoFormulario === 'autorizacao-imoveis') {
+          validatedData = autorizacaoImoveisSchema.parse(JSON.parse(formData.formData));
+        } else if (tipoFormulario === 'autorizacao-foto-venda') {
+          validatedData = autorizacaoFotoVendaSchema.parse(JSON.parse(formData.formData));
+        } else if (tipoFormulario === 'autorizacao-foto-locacao') {
+          validatedData = autorizacaoFotoLocacaoSchema.parse(JSON.parse(formData.formData));
         } else {
           return res.status(400).json({ message: 'Tipo de formulário inválido' });
         }
@@ -461,6 +479,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         validatedData = fichaCadastralLocatariaPJSchema.parse(JSON.parse(formData.formData));
       } else if (tipoFormulario === 'cadastro-imovel') {
         validatedData = cadastroImovelSchema.parse(JSON.parse(formData.formData));
+      } else if (tipoFormulario === 'ficha-locataria-pf') {
+        validatedData = fichaCadastralLocatarioPFSchema.parse(JSON.parse(formData.formData));
+      } else if (tipoFormulario === 'proposta-compra') {
+        validatedData = propostaCompraSchema.parse(JSON.parse(formData.formData));
+      } else if (tipoFormulario === 'proposta-locacao') {
+        validatedData = propostaLocacaoSchema.parse(JSON.parse(formData.formData));
+      } else if (tipoFormulario === 'autorizacao-imoveis') {
+        validatedData = autorizacaoImoveisSchema.parse(JSON.parse(formData.formData));
+      } else if (tipoFormulario === 'autorizacao-foto-venda') {
+        validatedData = autorizacaoFotoVendaSchema.parse(JSON.parse(formData.formData));
+      } else if (tipoFormulario === 'autorizacao-foto-locacao') {
+        validatedData = autorizacaoFotoLocacaoSchema.parse(JSON.parse(formData.formData));
       } else {
         return res.status(400).json({ message: 'Tipo de formulário inválido' });
       }

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { Building, FileText, Home as HomeIcon, ChevronsRight } from "lucide-react";
+import { Building, FileText, Home as HomeIcon, ChevronsRight, User, ShoppingCart, Key, FileCheck, Camera, Image as ImageIcon } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import logo from "@/assets/logo.svg";
+import logo from "@/assets/logo.png";
 
 export default function Home() {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -31,6 +31,48 @@ export default function Home() {
       description: "Formulário para cadastro de imóveis disponíveis",
       icon: <HomeIcon className="h-12 w-12 text-primary" />,
       link: "/forms/cadastro-imovel"
+    },
+    {
+      id: 4,
+      title: "Ficha Cadastral - Locatário PF",
+      description: "Formulário para cadastro de locatários pessoa física",
+      icon: <User className="h-12 w-12 text-primary" />,
+      link: "/forms/ficha-locataria-pf"
+    },
+    {
+      id: 5,
+      title: "Proposta de Compra",
+      description: "Formulário de proposta para compra de imóvel",
+      icon: <ShoppingCart className="h-12 w-12 text-primary" />,
+      link: "/forms/proposta-compra"
+    },
+    {
+      id: 6,
+      title: "Proposta para Locação",
+      description: "Formulário de proposta para locação de imóvel",
+      icon: <Key className="h-12 w-12 text-primary" />,
+      link: "/forms/proposta-locacao"
+    },
+    {
+      id: 7,
+      title: "Autorização Lanza Imóveis",
+      description: "Autorização para comercialização de imóvel",
+      icon: <FileCheck className="h-12 w-12 text-primary" />,
+      link: "/forms/autorizacao-imoveis"
+    },
+    {
+      id: 8,
+      title: "Autorização com Foto - Venda",
+      description: "Autorização para venda com fotos do imóvel",
+      icon: <Camera className="h-12 w-12 text-primary" />,
+      link: "/forms/autorizacao-foto-venda"
+    },
+    {
+      id: 9,
+      title: "Autorização com Foto - Locação",
+      description: "Autorização para locação com fotos do imóvel",
+      icon: <ImageIcon className="h-12 w-12 text-primary" />,
+      link: "/forms/autorizacao-foto-locacao"
     }
   ];
 
