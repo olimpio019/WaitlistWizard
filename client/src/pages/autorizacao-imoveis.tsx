@@ -29,6 +29,7 @@ export default function AutorizacaoImoveis() {
       cpfCnpjProprietario: '',
       emailProprietario: '',
       telefoneProprietario: '',
+      codigoImovel: '',
       enderecoImovel: '',
       tipoImovel: '',
       areaImovel: '',
@@ -195,6 +196,20 @@ export default function AutorizacaoImoveis() {
               <CardDescription>Dados do imóvel a ser autorizado</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
+              <FormField
+                control={form.control}
+                name="codigoImovel"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Código do Imóvel</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Código do imóvel" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
               <FormField
                 control={form.control}
                 name="enderecoImovel"
