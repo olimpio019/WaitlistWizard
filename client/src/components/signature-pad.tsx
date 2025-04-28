@@ -1,85 +1,81 @@
-import { useEffect, useRef, forwardRef, useImperativeHandle, useState } from "react";
-import SignatureCanvas from "react-signature-canvas";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import React, { forwardRef, useRef, useEffect } from 'react';
+import * as SignatureCanvas from 'react-signature-canvas';
+import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
+
+export interface SignaturePadRef {
+  clear: () => void;
+  isEmpty: () => boolean;
+  getTrimmedCanvas: () => HTMLCanvasElement;
+}
 
 interface SignaturePadProps {
   onChange?: (dataUrl: string) => void;
-  width?: number;
+  width?: string | number;
   height?: number;
   className?: string;
   value?: string;
 }
 
-export interface SignaturePadRef {
-  clear: () => void;
-  getDataUrl: () => string;
-  isEmpty: () => boolean;
-}
-
 const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
-  ({ onChange, width, height = 150, className, value }, ref) => {
-    const sigCanvas = useRef<SignatureCanvas>(null);
-    const [isEmpty, setIsEmpty] = useState(true);
+  ({ onChange, width, height = 200, className, value }, ref) => {
+    const sigCanvas = useRef<SignatureCanvas.default>(null);
+    const [isEmpty, setIsEmpty] = React.useState(true);
 
-    useImperativeHandle(ref, () => ({
-      clear: () => {
-        if (sigCanvas.current) {
-          sigCanvas.current.clear();
-          setIsEmpty(true);
-          if (onChange) onChange("");
+    useEffect(() => {
+      if (value && sigCanvas.current) {
+        sigCanvas.current.fromDataURL(value);
+        setIsEmpty(false);
+      }
+    }, [value]);
+
+    const handleEnd = () => {
+      if (sigCanvas.current) {
+        const isEmpty = sigCanvas.current.isEmpty();
+        setIsEmpty(isEmpty);
+        if (!isEmpty && onChange) {
+          try {
+            const dataUrl = sigCanvas.current.toDataURL('image/png');
+            onChange(dataUrl);
+          } catch (error) {
+            console.error('Erro ao obter assinatura:', error);
+          }
         }
-      },
-      getDataUrl: () => {
-        return sigCanvas.current?.isEmpty()
-          ? ""
-          : sigCanvas.current?.toDataURL("image/png") || "";
-      },
-      isEmpty: () => {
-        return sigCanvas.current ? sigCanvas.current.isEmpty() : true;
-      },
-    }));
+      }
+    };
 
     const handleClear = () => {
       if (sigCanvas.current) {
         sigCanvas.current.clear();
         setIsEmpty(true);
-        if (onChange) onChange("");
-      }
-    };
-
-    const handleEnd = () => {
-      if (sigCanvas.current) {
-        setIsEmpty(sigCanvas.current.isEmpty());
-        if (onChange && !sigCanvas.current.isEmpty()) {
-          onChange(sigCanvas.current.toDataURL("image/png"));
+        if (onChange) {
+          onChange('');
         }
       }
     };
 
-    // If a value is provided, try to load it
-    useEffect(() => {
-      if (value && sigCanvas.current) {
-        // Create a temporary image to load the data URL
-        const img = new Image();
-        img.onload = () => {
-          const ctx = sigCanvas.current?.getCanvas().getContext("2d");
-          if (ctx) {
-            // Clear current canvas
-            sigCanvas.current?.clear();
-            // Draw the image
-            ctx.drawImage(img, 0, 0);
-            setIsEmpty(false);
-          }
-        };
-        img.src = value;
-      }
-    }, [value]);
+    React.useImperativeHandle(ref, () => ({
+      clear: () => {
+        if (sigCanvas.current) {
+          sigCanvas.current.clear();
+          setIsEmpty(true);
+        }
+      },
+      isEmpty: () => {
+        return sigCanvas.current?.isEmpty() ?? true;
+      },
+      getTrimmedCanvas: () => {
+        if (sigCanvas.current) {
+          return sigCanvas.current.getTrimmedCanvas();
+        }
+        return document.createElement('canvas');
+      },
+    }));
 
     return (
       <div className={cn("border-2 border-gray-300 dark:border-gray-600 rounded-lg p-4 bg-white dark:bg-gray-700", className)}>
-        <div className="w-full h-32 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800">
-          <SignatureCanvas
+        <div className="w-full h-[200px] border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800">
+          <SignatureCanvas.default
             ref={sigCanvas}
             canvasProps={{
               width: width || "100%",
@@ -92,12 +88,17 @@ const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
                 ? "#FFFFFF"
                 : "#000000"
             }
-            velocityFilterWeight={0.5}
-            minWidth={0.5}
+            velocityFilterWeight={0.7}
+            minWidth={1.5}
             maxWidth={2.5}
+            dotSize={2}
+            throttle={16}
           />
         </div>
-        <div className="mt-2 flex justify-end space-x-2">
+        <div className="mt-4 flex justify-between items-center">
+          <p className="text-sm text-muted-foreground">
+            Assine com o mouse ou dedo (dispositivos touch)
+          </p>
           <Button
             type="button"
             variant="outline"

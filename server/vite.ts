@@ -27,6 +27,7 @@ export async function setupVite(app: Express, server: Server) {
     middlewareMode: true,
     hmr: { server },
     allowedHosts: true,
+    base: '/',
   };
 
   const vite = await createViteServer({
@@ -71,7 +72,7 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(__dirname, "public");
+  const distPath = path.resolve(__dirname, "..", "dist");
 
   if (!fs.existsSync(distPath)) {
     throw new Error(
@@ -79,7 +80,11 @@ export function serveStatic(app: Express) {
     );
   }
 
-  app.use(express.static(distPath));
+  // Servir arquivos estáticos
+  app.use(express.static(distPath, {
+    index: false,
+    redirect: false
+  }));
 
   // fall through to index.html if the file doesn't exist
   app.use("*", (_req, res) => {

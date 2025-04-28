@@ -82,7 +82,7 @@ export default function Home() {
         <div className="flex justify-center mb-6">
           <img src={logo} alt="Logo Imobiliária Confiança" className="h-20" />
         </div>
-        <h1 className="text-4xl font-bold mb-4">Sistema de Gestão Imobiliária</h1>
+        <h1 className="text-4xl font-bold mb-4">Sistema de Inteligência Imobiliária</h1>
         <p className="text-xl text-muted-foreground">
           Preencha os formulários abaixo para cadastro em nosso sistema
         </p>
@@ -139,11 +139,11 @@ export default function Home() {
       </div>
 
       <div className="mt-16 max-w-3xl mx-auto text-center">
-        <h2 className="text-2xl font-semibold mb-4">Sobre Nossa Gestão Imobiliária</h2>
+        <h2 className="text-2xl font-semibold mb-4">Nossa Gestão Imobiliária</h2>
         <p className="text-muted-foreground mb-4">
           Nossa empresa oferece serviços completos de gestão imobiliária, 
-          incluindo locação, venda, administração de condomínios e consultoria.
-          Com anos de experiência no mercado, garantimos segurança e tranquilidade
+          incluindo locação, administração e venda.
+          Com 42 anos de experiência, garantimos segurança e tranquilidade
           para todos os nossos clientes.
         </p>
         <p className="text-muted-foreground">

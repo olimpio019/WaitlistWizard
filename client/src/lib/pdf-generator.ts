@@ -167,12 +167,12 @@ export const generateFichaCadastralFiadorPFPdf = (data: FichaCadastralFiadorPF, 
       yPos += 5;
       
       try {
-        // Add signature image
+        // Add signature image with better size
         const imgData = assinatura;
-        doc.addImage(imgData, 'PNG', 14, yPos, 60, 30);
+        doc.addImage(imgData, 'PNG', 14, yPos, 80, 40); // Aumentado o tamanho da assinatura
       } catch (error) {
         console.error("Error adding signature:", error);
-        yPos += 30;
+        yPos += 40;
         doc.text("(Assinatura não disponível)", 14, yPos);
       }
     } else {
@@ -329,12 +329,12 @@ export const generateFichaCadastralLocatariaPJPdf = (data: FichaCadastralLocatar
       yPos += 5;
       
       try {
-        // Add signature image
+        // Add signature image with better size
         const imgData = assinatura;
-        doc.addImage(imgData, 'PNG', 14, yPos, 60, 30);
+        doc.addImage(imgData, 'PNG', 14, yPos, 80, 40); // Aumentado o tamanho da assinatura
       } catch (error) {
         console.error("Error adding signature:", error);
-        yPos += 30;
+        yPos += 40;
         doc.text("(Assinatura não disponível)", 14, yPos);
       }
     } else {
@@ -509,12 +509,12 @@ export const generateCadastroImovelPdf = (data: CadastroImovel, assinatura?: str
       yPos += 5;
       
       try {
-        // Add signature image
+        // Add signature image with better size
         const imgData = assinatura;
-        doc.addImage(imgData, 'PNG', 14, yPos, 60, 30);
+        doc.addImage(imgData, 'PNG', 14, yPos, 80, 40); // Aumentado o tamanho da assinatura
       } catch (error) {
         console.error("Error adding signature:", error);
-        yPos += 30;
+        yPos += 40;
         doc.text("(Assinatura não disponível)", 14, yPos);
       }
     } else {
@@ -670,12 +670,12 @@ export const generateFichaCadastralLocatarioPFPdf = (data: FichaCadastralLocatar
       yPos += 5;
       
       try {
-        // Add signature image
+        // Add signature image with better size
         const imgData = assinatura;
-        doc.addImage(imgData, 'PNG', 14, yPos, 60, 30);
+        doc.addImage(imgData, 'PNG', 14, yPos, 80, 40); // Aumentado o tamanho da assinatura
       } catch (error) {
         console.error("Error adding signature:", error);
-        yPos += 30;
+        yPos += 40;
         doc.text("(Assinatura não disponível)", 14, yPos);
       }
     } else {
@@ -814,12 +814,12 @@ export const generatePropostaCompraPdf = (data: PropostaCompra, assinatura?: str
       yPos += 5;
       
       try {
-        // Add signature image
+        // Add signature image with better size
         const imgData = assinatura;
-        doc.addImage(imgData, 'PNG', 14, yPos, 60, 30);
+        doc.addImage(imgData, 'PNG', 14, yPos, 80, 40); // Aumentado o tamanho da assinatura
       } catch (error) {
         console.error("Error adding signature:", error);
-        yPos += 30;
+        yPos += 40;
         doc.text("(Assinatura não disponível)", 14, yPos);
       }
     } else {
@@ -956,12 +956,12 @@ export const generatePropostaLocacaoPdf = (data: PropostaLocacao, assinatura?: s
       yPos += 5;
       
       try {
-        // Add signature image
+        // Add signature image with better size
         const imgData = assinatura;
-        doc.addImage(imgData, 'PNG', 14, yPos, 60, 30);
+        doc.addImage(imgData, 'PNG', 14, yPos, 80, 40); // Aumentado o tamanho da assinatura
       } catch (error) {
         console.error("Error adding signature:", error);
-        yPos += 30;
+        yPos += 40;
         doc.text("(Assinatura não disponível)", 14, yPos);
       }
     } else {
@@ -1068,12 +1068,12 @@ export const generateAutorizacaoImoveisPdf = (data: AutorizacaoImoveis, assinatu
       yPos += 5;
       
       try {
-        // Add signature image
+        // Add signature image with better size
         const imgData = assinatura;
-        doc.addImage(imgData, 'PNG', 14, yPos, 60, 30);
+        doc.addImage(imgData, 'PNG', 14, yPos, 80, 40); // Aumentado o tamanho da assinatura
       } catch (error) {
         console.error("Error adding signature:", error);
-        yPos += 30;
+        yPos += 40;
         doc.text("(Assinatura não disponível)", 14, yPos);
       }
     } else {
@@ -1185,12 +1185,12 @@ export const generateAutorizacaoFotoVendaPdf = (data: AutorizacaoFotoVenda, assi
       yPos += 5;
       
       try {
-        // Add signature image
+        // Add signature image with better size
         const imgData = assinatura;
-        doc.addImage(imgData, 'PNG', 14, yPos, 60, 30);
+        doc.addImage(imgData, 'PNG', 14, yPos, 80, 40); // Aumentado o tamanho da assinatura
       } catch (error) {
         console.error("Error adding signature:", error);
-        yPos += 30;
+        yPos += 40;
         doc.text("(Assinatura não disponível)", 14, yPos);
       }
     } else {
@@ -1302,12 +1302,12 @@ export const generateAutorizacaoFotoLocacaoPdf = (data: AutorizacaoFotoLocacao, 
       yPos += 5;
       
       try {
-        // Add signature image
+        // Add signature image with better size
         const imgData = assinatura;
-        doc.addImage(imgData, 'PNG', 14, yPos, 60, 30);
+        doc.addImage(imgData, 'PNG', 14, yPos, 80, 40); // Aumentado o tamanho da assinatura
       } catch (error) {
         console.error("Error adding signature:", error);
-        yPos += 30;
+        yPos += 40;
         doc.text("(Assinatura não disponível)", 14, yPos);
       }
     } else {
