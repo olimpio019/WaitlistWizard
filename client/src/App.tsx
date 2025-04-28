@@ -21,17 +21,23 @@ import AutorizacaoFotoLocacao from "@/pages/autorizacao-foto-locacao";
 import MainLayout from "@/components/main-layout";
 import AuthLayout from "@/components/auth-layout";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
+import { useEffect } from "react";
 
 // Rotas protegidas para usuários autenticados
 const ProtectedRoute = ({ component: Component, admin = false, ...rest }: any) => {
   const { isAuthenticated, isAdmin, isLoading } = useAuth();
   const [, navigate] = useLocation();
 
-  // Enquanto verifica autenticação, mostra uma tela de carregamento
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isLoading, isAuthenticated, navigate]);
+
   if (isLoading) {
     return (
       <MainLayout>
-        <div className="flex items-center justify-center h-screen">
+        <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
             <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
             <p className="mt-4 text-lg">Carregando...</p>
@@ -41,20 +47,17 @@ const ProtectedRoute = ({ component: Component, admin = false, ...rest }: any) =
     );
   }
 
-  // Se não estiver autenticado, redireciona para o login
   if (!isAuthenticated) {
-    navigate("/login");
     return null;
   }
 
   // Se a rota exigir admin e o usuário não for admin, redireciona para o dashboard
   if (admin && !isAdmin) {
-    navigate("/");
+    navigate("/dashboard");
     return null;
   }
 
-  // Se passar por todas as verificações, renderiza o componente
-  return <MainLayout><Component {...rest} /></MainLayout>;
+  return <Component {...rest} />;
 };
 
 // Rotas públicas para usuários não autenticados
